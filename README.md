@@ -55,9 +55,13 @@ To run this file in calcula:
 train.sh is set up to perform the training of the transformer model by setting up the following parameters:
 
 **WORKING_DIR**: Directory where the binaries from the preprocess are stored
+
 **CP_DIR**: Directory where checkpoints will be stored
+
 **PYTHON**: Absolute path of the python binary. If the default python is already set up use only "python"
+
 **FAIRSEQ_DIR**: Absolute path to the Fairseq installation. If the script is used from this directory "./" is enough
+
 **SAVE_UPDATES**: Number of updates between checkpoints 
 
 The file also contains all the parementers
@@ -71,11 +75,17 @@ To run this file in calcula:
 generate.sh is set up to perform inference over the test set preprocessed before. The following parameters have to be set:
 
 **SRC**: Source language prefix
+
 **TGT**: Target language prefix
+
 **DEST_DIR**: Directory where the binaries from the preprocess are stored
+
 **CP_DIR**: Directory where checkpoints are stored
+
 **CP**: Name of the checkpoint to employ 
+
 **PYTHON**: Absolute path of the python binary. If the default python is already set up use only "python"
+
 **FAIRSEQ_DIR**: Absolute path to the Fairseq installation. If the script is used from this directory "./" is enough
 
 To run this file in calcula:
