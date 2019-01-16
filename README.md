@@ -27,16 +27,23 @@ In preprocess.sh you will have the script prepared to perform the following task
 The following variable have to be set to the needs of your task:
 
 **WORKING_DIR**: Directory where train, dev and test sets are located
+
 **SRC**: Source language prefix. Files in this language should have this prefix as extension (*.SRC)
+
 **TGT**: Target language prefix. Files in this language should have this prefix as extension (*.SRC)
 
 **TRN_PREF**: Name of the files containing the training data without the extension. Files should have the format TRN_PREF.SRC and TRN_PREF.TGT
+
 **VAL_PREF**: Name of the files containing the development data without the extension. Files should have the format VAL_PREF.SRC and VAL_PREF.TGT
+
 **TES_PREF**: Name of the files containing the test data without the extension. Files should have the format TEST_PREF.SRC and TEST_PREF.TGT
+
 **PYTHON**: Absolute path of the python binary. If the default python is already set up use only "python"
+
 **FAIRSEQ_DIR**: Absolute path to the Fairseq installation. If the script is used from this directory "./" is enough
 
 **DEST_DIR**: Directory where the binaries will be located. If it does not exist it will be created by the script
+
 **N_OP**: Number of operations when applying the BPE to the data.
 
 To run this file in calcula:
