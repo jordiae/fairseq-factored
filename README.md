@@ -12,7 +12,7 @@ Also install all the requeriments from fairseq by running:
 
     pip install -r requirements.txt
 
-And install fairseq itself:
+And install fairseq itself (this step if you are doing modifications or running the scripts from the same folder is optional):
 
     python setup.py build develop
 
@@ -48,7 +48,7 @@ The following variable have to be set to the needs of your task:
 
 To run this file in calcula:
 
-    sbatch preprocess.py
+    sbatch preprocess.ph
 
 ## TRAINING
 
