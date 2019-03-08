@@ -105,4 +105,6 @@ for l in $src $tgt; do
     cat $tmp/train.$l >> $TRAIN
 done
 
+mkdir ../../../../data/
+mv orig ../../../../data/
 mv iwslt14.tokenized.de-en ../../../../data/
