@@ -104,3 +104,5 @@ rm -f $TRAIN
 for l in $src $tgt; do
     cat $tmp/train.$l >> $TRAIN
 done
+
+mv iwslt14.tokenized.de-en ../../../../data/
