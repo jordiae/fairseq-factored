@@ -16,14 +16,14 @@ def get_pos_tagger(path, pos_tagger_link, links):
         os.system('sh install-tagger.sh')
         os.chdir('..')
         os.system('mv utf8-tokenize.perl ' + os.path.join(path,'cmd','utf8-tokenize.perl'))
-'''
-def apply_pos_tagger(tagger,text):
-    pos_tags_list = list(map(lambda tag: tag.pos,treetaggerwrapper.make_tags(tagger.tag_text(text))))
-    pos_tags_str = ' '.join(str(x) for x in pos_tags_list)
-    return pos_tags_str
-'''
-def apply_pos_tagger(text_file, output_tags_file):
-    os.system("cat " + text_file + " | sed -E 's/(([a-z])|[0-9])--/\1/g' | sed -E 's/\.\.\.\.+/\.\.\./g' | cmd/tree-tagger-german | awk '{ print $2 }' | tr -s '\n' '\n' > " + output_tags_file)
+
+#def apply_pos_tagger(tagger,text):
+#    pos_tags_list = list(map(lambda tag: tag.pos,treetaggerwrapper.make_tags(tagger.tag_text(text))))
+#    pos_tags_str = ' '.join(str(x) for x in pos_tags_list)
+#    return pos_tags_str
+
+def apply_pos_tagger(text_file, output_tags_file, tagger_path):
+    os.system("cat " + text_file + " | sed -E 's/(([a-z])|[0-9])--/\1/g' | sed -E 's/\.\.\.\.+/\.\.\./g' | " + tagger_path + "/cmd/tree-tagger-german | awk '{ print $2 }' | tr -s '\n' '\n' > " + output_tags_file)
 
 def align_pos_tags_bpe(text_bpe,tags):
     token_index = 0
@@ -61,19 +61,19 @@ def main():
     tagger = treetaggerwrapper.TreeTagger(TAGLANG='de')
     '''
     #text = 'Das ist ein Test.'
-    TOKENIZED_TEXT_FILES_PATH = ''
-    BPE_TEXT_FILES_PATH = ''
+    TOKENIZED_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14.tokenized.de-en', 'tmp')
+    BPE_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14-preprocessed-joined')
     LANG = 'de'
     for dataset in  ['train','valid','test']:
-        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.tags.' + LANG))
+        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.tags.' + LANG),POS_TAGGER_PATH)
         text_bpe = ''
-        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG,'r')) as f:
+        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG),'r') as f:
             text_bpe = f.read()
         tags = ''
         with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.tags.' + LANG),'r') as f:
             tags = f.read()
         aligned_tags = align_pos_tags_bpe(text_bpe, tags)
-        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.tags.' + LANG,'w')) as f:
+        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.tags.' + LANG),'w') as f:
             f.write(aligned_tags)
     '''
     with open(sys.argv[1],'r') as f:
