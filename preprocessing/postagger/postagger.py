@@ -65,15 +65,15 @@ def main():
     BPE_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14-preprocessed-joined')
     LANG = 'de'
     for dataset in  ['train','valid','test']:
-        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.tags.' + LANG),POS_TAGGER_PATH)
+        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.postags.' + LANG),POS_TAGGER_PATH)
         text_bpe = ''
         with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG),'r') as f:
             text_bpe = f.read()
         tags = ''
-        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.tags.' + LANG),'r') as f:
+        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.postags.' + LANG),'r') as f:
             tags = f.read()
         aligned_tags = align_pos_tags_bpe(text_bpe, tags)
-        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.tags.' + LANG),'w') as f:
+        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.postags.' + LANG),'w') as f:
             f.write(aligned_tags)
     '''
     with open(sys.argv[1],'r') as f:

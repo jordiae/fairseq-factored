@@ -5,10 +5,10 @@
 #SBATCH --gres=gpu:0
 #SBATCH --mem=10G # Memory
 #SBATCH --ignore-pbs                                                            
-#SBATCH --output=../../logs/preprocess-joined-bpe.log
+#SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/preprocess-joined-bpe.log
 
 
-WORKING_DIR="../../data/iwslt14.tokenized.de-en/tmp"
+WORKING_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14.tokenized.de-en/tmp"
 SRC="de"
 TGT="en"
 
@@ -16,9 +16,9 @@ TRN_PREF="train"
 VAL_PREF="valid"
 TES_PREF="test"
 PYTHON="python"
-FAIRSEQ_DIR="fairseq"
+FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-factored"
 
-DEST_DIR="../../data/iwslt14-preprocessed-joined"
+DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined"
 
 mkdir $DEST_DIR
 
