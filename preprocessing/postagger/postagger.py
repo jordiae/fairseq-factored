@@ -32,19 +32,22 @@ def align_pos_tags_bpe(text_bpe,tags):
     splitted_tags = tags.split()
     aligned_tags = ''
     while token_index < len(splitted_text_bpe):
-        if '@' in splitted_text_bpe[token_index]:
-            while '@' in splitted_text_bpe[token_index]:
+        if '@@' in splitted_text_bpe[token_index]:
+            while '@@' in splitted_text_bpe[token_index]:
                 #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                 aligned_tags += (splitted_tags[tag_index])
+                aligned_tags += '\n'
                 token_index += 1
-                if '@' not in splitted_text_bpe[token_index]:
+                if '@@' not in splitted_text_bpe[token_index]:
                     #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                     aligned_tags += (splitted_tags[tag_index])
+                    aligned_tags += '\n'
                     token_index += 1
                     tag_index += 1
         else:
             #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
             aligned_tags += (splitted_tags[tag_index])
+            aligned_tags += '\n'
             token_index += 1
             tag_index += 1
     return aligned_tags
