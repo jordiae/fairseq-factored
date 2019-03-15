@@ -1,6 +1,7 @@
 #import treetaggerwrapper
 import os
 import sys
+import itertools
 
 def get_pos_tagger(path, pos_tagger_link, links):
     if not os.path.exists(path):
@@ -31,23 +32,33 @@ def align_pos_tags_bpe(text_bpe,tags):
     splitted_text_bpe = text_bpe.split()
     splitted_tags = tags.split()
     aligned_tags = ''
+    end_of_lines_positions = list(itertools.accumulate(list(map(lambda x: len(x.split()),text_bpe.splitlines()))))
+    end_of_line_index = 0
     while token_index < len(splitted_text_bpe):
         if '@@' in splitted_text_bpe[token_index]:
             while '@@' in splitted_text_bpe[token_index]:
                 #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                 aligned_tags += (splitted_tags[tag_index])
-                aligned_tags += '\n'
+                aligned_tags += ' '
                 token_index += 1
                 if '@@' not in splitted_text_bpe[token_index]:
                     #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                     aligned_tags += (splitted_tags[tag_index])
-                    aligned_tags += '\n'
+                    if token_index == end_of_lines_positions[end_of_line_index] - 1:
+                        aligned_tags += '\n'
+                        end_of_line_index += 1
+                    else:
+                        aligned_tags += ' '
                     token_index += 1
                     tag_index += 1
         else:
             #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
             aligned_tags += (splitted_tags[tag_index])
-            aligned_tags += '\n'
+            if token_index == end_of_lines_positions[end_of_line_index] - 1:
+                aligned_tags += '\n'
+                end_of_line_index += 1
+            else:
+                aligned_tags += ' '
             token_index += 1
             tag_index += 1
     return aligned_tags
