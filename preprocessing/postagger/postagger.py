@@ -84,10 +84,10 @@ def main():
         with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG),'r') as f:
             text_bpe = f.read()
         tags = ''
-        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.postags.' + LANG),'r') as f:
+        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG + '_postags'),'r') as f:
             tags = f.read()
         aligned_tags = align_pos_tags_bpe(text_bpe, tags)
-        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.postags.' + LANG),'w') as f:
+        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG + '_postags'),'w') as f:
             f.write(aligned_tags)
     '''
     with open(sys.argv[1],'r') as f:
