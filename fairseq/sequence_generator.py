@@ -12,6 +12,8 @@ import torch
 from fairseq import search, utils
 from fairseq.models import FairseqIncrementalDecoder
 
+from collections import OrderedDict
+
 
 class SequenceGenerator(object):
     def __init__(
@@ -102,8 +104,24 @@ class SequenceGenerator(object):
         """
         if maxlen_b is None:
             maxlen_b = self.maxlen
-
         for sample in data_itr:
+            if isinstance(sample, OrderedDict): # factored
+                mixed_sample = {}
+                for lang_pair in sample:
+                    if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
+                        continue
+                    if len(mixed_sample) == 0:
+                        mixed_sample = sample[lang_pair]
+                        src_tokens = mixed_sample['net_input']['src_tokens']
+                        mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens,
+                                                                                  0)  # torch.tensor(src_tokens)#.clone().detach()
+                    else:
+                        mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'],
+                                                                             torch.unsqueeze(
+                                                                                 sample[lang_pair]['net_input'][
+                                                                                     'src_tokens'], 0)))
+            sample = mixed_sample
+            #print(sample)
             s = utils.move_to_cuda(sample) if cuda else sample
             if 'net_input' not in s:
                 continue
@@ -151,7 +169,10 @@ class SequenceGenerator(object):
         """See generate"""
         src_tokens = encoder_input['src_tokens']
         src_lengths = (src_tokens.ne(self.eos) & src_tokens.ne(self.pad)).long().sum(dim=1)
-        bsz, srclen = src_tokens.size()
+        if len(src_tokens.size()) == 2:
+            bsz, srclen = src_tokens.size()
+        else: #factored
+            factor, bsz, srclen = src_tokens.size()
         maxlen = min(maxlen, self.maxlen) if maxlen is not None else self.maxlen
         if self.match_source_len:
             maxlen = src_lengths.max().item()
@@ -171,9 +192,12 @@ class SequenceGenerator(object):
                 incremental_states[model] = None
 
             # compute the encoder output for each beam
+            #print(factor,bsz,srclen)
             encoder_out = model.encoder(**encoder_input)
+            #print(encoder_out)
             new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
             new_order = new_order.to(src_tokens.device).long()
+
             encoder_out = model.encoder.reorder_encoder_out(encoder_out, new_order)
             encoder_outs.append(encoder_out)
 

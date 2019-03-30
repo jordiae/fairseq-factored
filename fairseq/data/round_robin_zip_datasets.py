@@ -48,7 +48,7 @@ class RoundRobinZipDatasets(FairseqDataset):
         return self._ordered_indices[key][index % len(self.datasets[key])]
 
     def __getitem__(self, index):
-        if self.eval_key is None:
+        if self.eval_key is None or self.eval_key == ['factored']:
             return OrderedDict([
                 (key, dataset[self._map_index(key, index)])
                 for key, dataset in self.datasets.items()
@@ -64,7 +64,7 @@ class RoundRobinZipDatasets(FairseqDataset):
         """Merge a list of samples to form a mini-batch."""
         if len(samples) == 0:
             return None
-        if self.eval_key is None:
+        if self.eval_key is None or self.eval_key == ['factored']:
             return OrderedDict([
                 (key, dataset.collater([sample[key] for sample in samples]))
                 for key, dataset in self.datasets.items()
@@ -77,12 +77,12 @@ class RoundRobinZipDatasets(FairseqDataset):
         if self.eval_key is None:
             # TODO should max_tokens be used independently for each batch like this?
             return OrderedDict([
-                (key, dataset.get_dummy_batch(max_tokens, max_positions[key]))
+                (key, dataset.get_dummy_batch(max_tokens, max_positions))#[key]))
                 for key, dataset in self.datasets.items()
             ])
         else:
             # at evaluation time it's useful to return a single batch directly
-            return self.datasets[self.eval_key].get_dummy_batch(max_tokens, max_positions[self.eval_key])
+            return self.datasets[self.eval_key].get_dummy_batch(max_tokens, max_positions)#[self.eval_key])
 
     def num_tokens(self, index):
         """Return an example's length (number of tokens), used for batching."""

@@ -17,11 +17,14 @@ from .fairseq_model import (
     FairseqModel,  # noqa: F401
     FairseqMultiModel,  # noqa: F401
     FairseqLanguageModel,  # noqa: F401
+    FairseqFactoredMultiModel
 )
 
 from .composite_encoder import CompositeEncoder  # noqa: F401
 from .distributed_fairseq_model import DistributedFairseqModel  # noqa: F401
 
+
+from .factored_composite_encoder import FactoredCompositeEncoder
 
 MODEL_REGISTRY = {}
 ARCH_MODEL_REGISTRY = {}

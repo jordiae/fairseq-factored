@@ -15,6 +15,7 @@ from .monolingual_dataset import MonolingualDataset
 from .round_robin_zip_datasets import RoundRobinZipDatasets
 from .token_block_dataset import TokenBlockDataset
 from .transform_eos_dataset import TransformEosDataset
+from .factored_language_pair_dataset import FactoredLanguagePairDataset
 
 from .iterators import (
     CountingIterator,
@@ -40,4 +41,5 @@ __all__ = [
     'ShardedIterator',
     'TokenBlockDataset',
     'TransformEosDataset',
+    'FactoredLanguagePairDataset'
 ]
