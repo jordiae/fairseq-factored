@@ -27,4 +27,4 @@ conda activate env
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang $SRC --target-lang $TGT \
     --trainpref $DEST_DIR/${TRN_PREF}.bpe --validpref $DEST_DIR/${VAL_PREF}.bpe --testpref $DEST_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --nwordstgt 32000 --nwordssrc 32000
+    --destdir $DEST_DIR  --tgtdict $DEST_DIR/dict.en.txt
