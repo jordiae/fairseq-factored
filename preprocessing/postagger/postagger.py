@@ -79,7 +79,7 @@ def main():
     BPE_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14-preprocessed-joined')
     LANG = 'de'
     for dataset in  ['train','valid','test']:
-        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.postags.' + LANG),POS_TAGGER_PATH)
+        apply_pos_tagger(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG), os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG + '_postags'),POS_TAGGER_PATH)
         text_bpe = ''
         with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG),'r') as f:
             text_bpe = f.read()
