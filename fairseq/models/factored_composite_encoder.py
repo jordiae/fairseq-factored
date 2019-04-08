@@ -22,7 +22,8 @@ class FactoredCompositeEncoder(FairseqEncoder):
     """
 
     def __init__(self, encoders):
-        super().__init__(next(iter(encoders.values())).dictionary)
+        #super().__init__(next(iter(encoders.values())).dictionary)
+        super().__init__(None)
         self.encoders = encoders
         for key in self.encoders:
             self.add_module(key, self.encoders[key])
@@ -49,12 +50,30 @@ class FactoredCompositeEncoder(FairseqEncoder):
         #encoder_out = {}
         for index, key in enumerate(self.encoders):
             encoder_out = self.encoders[key](src_tokens[index], src_lengths)
+            print(key,src_tokens[index].shape)
+            print(src_tokens[index])
+            print()
             #encoder_out[key] = self.encoders[key](src_tokens[index], src_lengths
             if concat_encoder is None:
                 concat_encoder = encoder_out#['encoder_out']
             else:
                 concat = torch.cat((concat_encoder['encoder_out'], encoder_out['encoder_out']))
                 concat_encoder['encoder_out'] = concat#torch.cat((concat_encoder, encoder_out['encoder_out']))
+                if concat_encoder['encoder_padding_mask'] is not None:
+                    '''
+                    if not torch.eq(concat_encoder['encoder_padding_mask'],encoder_out['encoder_padding_mask']).all():
+                        print('NO son iguals!')
+                    else:
+                        print('Si que ho son')
+                    '''
+                    #print(concat_encoder['encoder_padding_mask'].shape,encoder_out['encoder_padding_mask'].shape)
+                    concat_encoder['encoder_padding_mask'] = torch.cat((concat_encoder['encoder_padding_mask'], encoder_out['encoder_padding_mask']),1)
+                    #print(concat_encoder['encoder_padding_mask'].shape)
+                    #exit()
+        print(concat_encoder['encoder_out'].shape)
+        print(concat_encoder['encoder_out'])
+        print('___________________')
+        print()
         #encoder_out = concat_encoder
         #return encoder_out
         #print(concat_encoder)

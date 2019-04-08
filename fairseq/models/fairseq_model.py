@@ -456,10 +456,20 @@ class FairseqFactoredMultiModel(BaseFairseqModel):
 
     def forward(self, src_tokens, src_lengths, prev_output_tokens):
         encoder_out = self.encoder(src_tokens, src_lengths)
+        #print(src_tokens.size())
+        #print(encoder_out['encoder_out'].size())
         #print(encoder_out)
-        #print(encoder_out)
-        encoder_out['encoder_padding_mask'] = None # Hack...
+        #''''
+        if encoder_out['encoder_padding_mask'] is not None:
+            pass
+            #print(xx)
+            #print(encoder_out)
+            #input()
+        #'''
+        #encoder_out['encoder_padding_mask'] = None # Hack...
         decoder_out = self.decoder(prev_output_tokens, encoder_out)
+        #print(decoder_out[0].size())
+        #exit()
         return decoder_out
     '''
     def forward2(self, src_tokens, src_lengths, prev_output_tokens):
@@ -522,3 +532,88 @@ class FairseqFactoredMultiModel(BaseFairseqModel):
     def decoder(self):
         return self.models[self.keys[0]].decoder
     '''
+
+class FairseqFactoredMultiModel3(BaseFairseqModel):
+    """Base class for combining multiple encoder-decoder models."""
+    def __init__(self, encoders, decoders):
+        super().__init__()
+        assert encoders.keys() == decoders.keys()
+        self.keys = list(encoders.keys())
+        for key in self.keys:
+            assert isinstance(encoders[key], FairseqEncoder)
+            assert isinstance(decoders[key], FairseqDecoder)
+
+        self.models = nn.ModuleDict({
+            key: FairseqModel(encoders[key], decoders[key])
+            for key in self.keys
+        })
+
+    @staticmethod
+    def build_shared_embeddings(
+        dicts: Dict[str, Dictionary],
+        langs: List[str],
+        embed_dim: int,
+        build_embedding: callable,
+        pretrained_embed_path: Optional[str] = None,
+    ):
+        """
+        Helper function to build shared embeddings for a set of languages after
+        checking that all dicts corresponding to those languages are equivalent.
+
+        Args:
+            dicts: Dict of lang_id to its corresponding Dictionary
+            langs: languages that we want to share embeddings for
+            embed_dim: embedding dimension
+            build_embedding: callable function to actually build the embedding
+            pretrained_embed_path: Optional path to load pretrained embeddings
+        """
+        shared_dict = dicts[langs[0]]
+        if any(dicts[lang] != shared_dict for lang in langs):
+            raise ValueError(
+                '--share-*-embeddings requires a joined dictionary: '
+                '--share-encoder-embeddings requires a joined source '
+                'dictionary, --share-decoder-embeddings requires a joined '
+                'target dictionary, and --share-all-embeddings requires a '
+                'joint source + target dictionary.'
+            )
+        return build_embedding(
+            shared_dict, embed_dim, pretrained_embed_path
+        )
+
+    def forward(self, src_tokens, src_lengths, prev_output_tokens):
+        '''
+        decoder_outs = {}
+        for key in self.keys:
+            encoder_out = self.models[key].encoder(src_tokens, src_lengths)
+            decoder_outs[key] = self.models[key].decoder(prev_output_tokens, encoder_out)
+        return decoder_outs
+        '''
+        concat_encoder = None
+        # encoder_out = {}
+        for index, key in enumerate(self.encoders):
+            encoder_out = self.encoders[key](src_tokens[index], src_lengths)
+            # encoder_out[key] = self.encoders[key](src_tokens[index], src_lengths
+            if concat_encoder is None:
+                concat_encoder = encoder_out  # ['encoder_out']
+            else:
+                concat = torch.cat((concat_encoder['encoder_out'], encoder_out['encoder_out']))
+                concat_encoder['encoder_out'] = concat
+
+    def max_positions(self):
+        """Maximum length supported by the model."""
+        return {
+            key: (self.models[key].encoder.max_positions(), self.models[key].decoder.max_positions())
+            for key in self.keys
+        }
+
+    def max_decoder_positions(self):
+        """Maximum length supported by the decoder."""
+        return min(model.decoder.max_positions() for model in self.models.values())
+
+    @property
+    def encoder(self):
+        return self.models[self.keys[0]].encoder
+
+    @property
+    def decoder(self):
+        return self.models[self.keys[0]].decoder

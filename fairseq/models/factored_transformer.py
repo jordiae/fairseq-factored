@@ -205,6 +205,17 @@ def factored_transformer_iwslt_de_en(args):
     args.decoder_layers = getattr(args, 'decoder_layers', 1)
     base_factored_architecture(args)
     '''
+    '''
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 16)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 32)
+    args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)
+    args.encoder_layers = getattr(args, 'encoder_layers', 1)
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 16)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 32)
+    args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
+    args.decoder_layers = getattr(args, 'decoder_layers', 1)
+    base_factored_architecture(args)
+    '''
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 16)
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 32)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)

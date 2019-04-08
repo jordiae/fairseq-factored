@@ -5,10 +5,10 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=20G # Memory
 #SBATCH --ignore-pbs                                                            
-#SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/train8-factored-bpe-postags.log
+#SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/train9-factored-bpe-postags-al.log
 
 WORKING_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined"
-CP_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined/checkpoints8"
+CP_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined/checkpoints9"
 PYTHON="python"
 FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-factored"
 

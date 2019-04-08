@@ -197,7 +197,10 @@ class FactoredTranslationTask(FairseqTask):
         model.train()
         agg_loss, agg_sample_size, agg_logging_output = 0., 0., {}
         mixed_sample = {}
+        # lpairs = ['de-en', 'de_postags-en']
+        # train_lpairs = []
         for lang_pair in self.args.lang_pairs:
+            #train_lpairs.append(lang_pair)
             if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
                 continue
             if len(mixed_sample) == 0:
@@ -236,6 +239,18 @@ class FactoredTranslationTask(FairseqTask):
         # TODO make summing of the sample sizes configurable
         agg_sample_size += sample_size
         agg_logging_output = logging_output
+        '''
+        if lpairs != train_lpairs:
+            print('FAIL (train)')
+            exit()
+        '''
+        #yy = model(**mixed_sample['net_input'])
+        #print(mixed_sample['net_input']['src_tokens'].shape,yy[0].shape)
+        #print()
+        #print(yy)
+        #import torchviz
+        #print(dict(list(model.named_parameters())))
+        #torchviz.make_dot(yy)#,params = dict(list(model.named_parameters()) + [('x', mixed_sample['net_input']['src_tokens'])]))
         return agg_loss, agg_sample_size, agg_logging_output
         '''
         #print(sample)
@@ -301,7 +316,10 @@ class FactoredTranslationTask(FairseqTask):
                 agg_logging_output[lang_pair] = logging_output
             '''
             mixed_sample = {}
+            # lpairs = ['de-en', 'de_postags-en']
+            # valid_lpairs = []
             for lang_pair in self.args.lang_pairs:
+                # valid_lpairs.append(lang_pair)
                 if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
                     continue
                 if len(mixed_sample) == 0:
@@ -315,6 +333,11 @@ class FactoredTranslationTask(FairseqTask):
         # TODO make summing of the sample sizes configurable
         agg_sample_size += sample_size
         agg_logging_output = logging_output
+        '''
+        if lpairs != valid_lpairs:
+            print('FAIL (valid)')
+            exit()
+        '''
         return agg_loss, agg_sample_size, agg_logging_output
 
     def init_logging_output(self, sample):
