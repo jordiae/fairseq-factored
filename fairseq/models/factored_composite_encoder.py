@@ -50,9 +50,9 @@ class FactoredCompositeEncoder(FairseqEncoder):
         #encoder_out = {}
         for index, key in enumerate(self.encoders):
             encoder_out = self.encoders[key](src_tokens[index], src_lengths)
-            print(key,src_tokens[index].shape)
-            print(src_tokens[index])
-            print()
+            #print(key,src_tokens[index].shape)
+            #print(src_tokens[index])
+            #print()
             #encoder_out[key] = self.encoders[key](src_tokens[index], src_lengths
             if concat_encoder is None:
                 concat_encoder = encoder_out#['encoder_out']
@@ -70,10 +70,10 @@ class FactoredCompositeEncoder(FairseqEncoder):
                     concat_encoder['encoder_padding_mask'] = torch.cat((concat_encoder['encoder_padding_mask'], encoder_out['encoder_padding_mask']),1)
                     #print(concat_encoder['encoder_padding_mask'].shape)
                     #exit()
-        print(concat_encoder['encoder_out'].shape)
-        print(concat_encoder['encoder_out'])
-        print('___________________')
-        print()
+        #print(concat_encoder['encoder_out'].shape)
+        #print(concat_encoder['encoder_out'])
+        #print('___________________')
+        #print()
         #encoder_out = concat_encoder
         #return encoder_out
         #print(concat_encoder)
