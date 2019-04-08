@@ -2,8 +2,8 @@
 
 
 #SBATCH -p veu # Partition to submit to
-#SBATCH --gres=gpu:0
-#SBATCH --mem=10G # Memory
+#SBATCH --gres=gpu:1
+#SBATCH --mem=20G # Memory
 #SBATCH --ignore-pbs                                                            
 #SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/generate8-factored-bpe-postags-remove-bpe.log
 
@@ -13,9 +13,9 @@ SRC="de"
 TGT="en"
 DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined"
 CP_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined/checkpoints8"
-#CP="checkpoint_best.pt"
-CP="model.pt"
-PYTHON="/home/usuaris/veu/cescola/virtualenv-16.0.0/torch/bin/python"
+CP="checkpoint_best.pt"
+#CP="model.pt"
+PYTHON="python"
 FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-factored"
 
 # Activate conda environment
