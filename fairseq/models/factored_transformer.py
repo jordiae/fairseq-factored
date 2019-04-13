@@ -136,19 +136,19 @@ class FactoredTransformerModel(FairseqFactoredMultiModel):
                 if shared_encoder_embed_tokens is not None:
                     encoder_embed_tokens = shared_encoder_embed_tokens
                 else:
-                    encoder_embed_dim = args.encoder_embed_dim
                     if lang == 'de_postags_at':
-                        encoder_embed_dim = 34
                         args2 = deepcopy(args)
-                        args2.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 32)
-                        args2.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 64)
-                    encoder_embed_tokens = build_embedding(
-                        task.dicts[lang], encoder_embed_dim, args.encoder_embed_path
-                    )
-                if lang == 'de_postags_at':
-                    lang_encoders[lang] = TransformerEncoder(args2, task.dicts[lang], encoder_embed_tokens)
-                else:
-                    lang_encoders[lang] = TransformerEncoder(args, task.dicts[lang], encoder_embed_tokens)
+                        args2.encoder_embed_dim = 32
+                        args2.encoder_ffn_embed_dim = 64
+                        encoder_embed_tokens = build_embedding(
+                            task.dicts[lang], args2.encoder_embed_dim, args.encoder_embed_path
+                        )
+                        lang_encoders[lang] = TransformerEncoder(args2, task.dicts[lang], encoder_embed_tokens)
+                    else:
+                        encoder_embed_tokens = build_embedding(
+                            task.dicts[lang], args.encoder_embed_dim, args.encoder_embed_path
+                        )
+                        lang_encoders[lang] = TransformerEncoder(args, task.dicts[lang], encoder_embed_tokens)
             return lang_encoders[lang]
 
         def get_decoder(lang):
