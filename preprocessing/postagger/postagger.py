@@ -36,6 +36,7 @@ def align_pos_tags_bpe(text_bpe,tags):
     end_of_line_index = 0
     while token_index < len(splitted_text_bpe):
         if '@@' in splitted_text_bpe[token_index]:
+            aligned_tags += '@@'
             while '@@' in splitted_text_bpe[token_index]:
                 #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                 aligned_tags += (splitted_tags[tag_index])
@@ -84,10 +85,10 @@ def main():
         with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG),'r') as f:
             text_bpe = f.read()
         tags = ''
-        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG + '_postags'),'r') as f:
+        with open(os.path.join(TOKENIZED_TEXT_FILES_PATH, dataset + '.' + LANG + '_postags_at'),'r') as f:
             tags = f.read()
         aligned_tags = align_pos_tags_bpe(text_bpe, tags)
-        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG + '_postags'),'w') as f:
+        with open(os.path.join(BPE_TEXT_FILES_PATH, dataset + '.bpe.' + LANG + '_postags_at'),'w') as f:
             f.write(aligned_tags)
     '''
     with open(sys.argv[1],'r') as f:
