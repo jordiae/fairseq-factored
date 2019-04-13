@@ -5,18 +5,18 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=10G # Memory
 #SBATCH --ignore-pbs
-#SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/preprocess-de2.log
+#SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/preprocess-postags-bpe-at.log
 
 
 WORKING_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined"
-SRC="de2"
+SRC="de_postags_at"
 TGT="en"
 
 TRN_PREF="train"
 VAL_PREF="valid"
 TES_PREF="test"
 PYTHON="python"
-FACTOR="de2"
+FACTOR="de_postags_at"
 FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-factored"
 
 DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14-preprocessed-joined"
