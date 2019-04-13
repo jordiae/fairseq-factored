@@ -36,10 +36,10 @@ def align_pos_tags_bpe(text_bpe,tags):
     end_of_line_index = 0
     while token_index < len(splitted_text_bpe):
         if '@@' in splitted_text_bpe[token_index]:
-            aligned_tags += '@@'
             while '@@' in splitted_text_bpe[token_index]:
                 #print(splitted_text_bpe[token_index],splitted_tags[tag_index])
                 aligned_tags += (splitted_tags[tag_index])
+                aligned_tags += '@@'
                 aligned_tags += ' '
                 token_index += 1
                 if '@@' not in splitted_text_bpe[token_index]:
