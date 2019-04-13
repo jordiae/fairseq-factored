@@ -21,6 +21,7 @@ from .transformer import (
     TransformerDecoder,
 )
 
+from copy import deepcopy
 
 @register_model('factored_transformer')
 class FactoredTransformerModel(FairseqFactoredMultiModel):
@@ -135,10 +136,19 @@ class FactoredTransformerModel(FairseqFactoredMultiModel):
                 if shared_encoder_embed_tokens is not None:
                     encoder_embed_tokens = shared_encoder_embed_tokens
                 else:
+                    encoder_embed_dim = args.encoder_embed_dim
+                    if lang == 'de_postags_at':
+                        encoder_embed_dim = 34
+                        args2 = deepcopy(args)
+                        args2.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 32)
+                        args2.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 64)
                     encoder_embed_tokens = build_embedding(
-                        task.dicts[lang], args.encoder_embed_dim, args.encoder_embed_path
+                        task.dicts[lang], encoder_embed_dim, args.encoder_embed_path
                     )
-                lang_encoders[lang] = TransformerEncoder(args, task.dicts[lang], encoder_embed_tokens)
+                if lang == 'de_postags_at':
+                    lang_encoders[lang] = TransformerEncoder(args2, task.dicts[lang], encoder_embed_tokens)
+                else:
+                    lang_encoders[lang] = TransformerEncoder(args2, task.dicts[lang], encoder_embed_tokens)
             return lang_encoders[lang]
 
         def get_decoder(lang):
@@ -170,14 +180,16 @@ class FactoredTransformerModel(FairseqFactoredMultiModel):
 @register_model_architecture('factored_transformer', 'factored_transformer')
 def base_factored_architecture(args):
     base_architecture(args)
+    '''
     args.share_encoder_embeddings = False
     args.share_decoder_embeddings = True
     args.share_encoders = False
     args.share_decoders = True
-    #args.share_encoder_embeddings = getattr(args, 'share_encoder_embeddings', False)
-    #args.share_decoder_embeddings = getattr(args, 'share_decoder_embeddings', False)
-    #args.share_encoders = getattr(args, 'share_encoders', False)
-    #args.share_decoders = getattr(args, 'share_decoders', False)
+    '''
+    args.share_encoder_embeddings = getattr(args, 'share_encoder_embeddings', False)
+    args.share_decoder_embeddings = getattr(args, 'share_decoder_embeddings', True)
+    args.share_encoders = getattr(args, 'share_encoders', False)
+    args.share_decoders = getattr(args, 'share_decoders', True)
 
 
 @register_model_architecture('factored_transformer', 'factored_transformer_iwslt_de_en')
@@ -186,8 +198,8 @@ def factored_transformer_iwslt_de_en(args):
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1024)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
-    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 512)
-    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1024)
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
     args.decoder_layers = getattr(args, 'decoder_layers', 6)
     base_factored_architecture(args)
@@ -216,10 +228,11 @@ def factored_transformer_iwslt_de_en(args):
     args.decoder_layers = getattr(args, 'decoder_layers', 1)
     base_factored_architecture(args)
     '''
-    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 16)
-    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 32)
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 8)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 16)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)
     args.encoder_layers = getattr(args, 'encoder_layers', 1)
+
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 16)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 32)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
