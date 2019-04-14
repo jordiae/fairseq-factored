@@ -74,6 +74,13 @@ class FactoredTranslationTask(FairseqTask):
                             help='max number of tokens in the source sequence')
         parser.add_argument('--max-target-positions', default=1024, type=int, metavar='N',
                             help='max number of tokens in the target sequence')
+
+        parser.add_argument('--factors-to-freeze', default=None, metavar='PAIRS',
+                            help='Comma-separated list of the factors to be frozen (default: None): de_postags-en,...')
+        #parser.add_argument('--reduced-factor-embed', default=None, type=str,
+        #                    help='name of the factor the embeddings of which will be reduced. Default: undefined (no reduction). Notice that it only works with factored_transformer_iwslt_de_en architecture.')
+        parser.add_argument('--freeze-factors-epoch', default=10, type=int, metavar='N',
+                            help='Freeze training of factors starting at the required epoch (only for --factors-to-freeze). Default: 10.')
         # fmt: on
 
     def __init__(self, args, dicts, training):
@@ -327,7 +334,7 @@ class FactoredTranslationTask(FairseqTask):
                     src_tokens = mixed_sample['net_input']['src_tokens']
                     mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens, 0)  # torch.tensor(src_tokens)#.clone().detach()
                 else:
-                    mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'], 0)))
+                    mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'],0)))
         loss, sample_size, logging_output = criterion(model, mixed_sample)
         agg_loss += loss.data.item()
         # TODO make summing of the sample sizes configurable

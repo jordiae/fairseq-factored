@@ -136,10 +136,10 @@ class FactoredTransformerModel(FairseqFactoredMultiModel):
                 if shared_encoder_embed_tokens is not None:
                     encoder_embed_tokens = shared_encoder_embed_tokens
                 else:
-                    if lang == 'de_postags_at':
+                    if lang == args.factor:
                         args2 = deepcopy(args)
-                        args2.encoder_embed_dim = 32
-                        args2.encoder_ffn_embed_dim = 64
+                        args2.encoder_embed_dim = args.factor_encoder_embed_dim
+                        args2.encoder_ffn_embed_dim = args.factor_encoder_embed_dim * 2
                         encoder_embed_tokens = build_embedding(
                             task.dicts[lang], args2.encoder_embed_dim, args.encoder_embed_path
                         )
@@ -198,6 +198,8 @@ def factored_transformer_iwslt_de_en(args):
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1024)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
+    args.factor_encoder_embed_dim = 32
+    args.factor = 'de_postags_at'
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
