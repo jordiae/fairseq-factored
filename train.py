@@ -107,13 +107,12 @@ def main(args):
 
 def train(args, trainer, task, epoch_itr):
     """Train the model for one epoch."""
-    if type(task) == "<class 'fairseq.tasks.factored_translation.FactoredTranslationTask'>":  # factored
+    if type(task) is tasks.factored_translation.FactoredTranslationTask:  # factored
         if args.factors_to_freeze is not None:
-            if epoch_itr.epoch == args.freeze_factors_epoch + 1:
+            if epoch_itr.epoch == args.freeze_factors_epoch:
                 for factor in args.factors_to_freeze:
                     for param in trainer.get_model().encoder.encoders[factor].parameters():
                         param.requires_grad = False
-
 
     # Update parameters every N batches
     if epoch_itr.epoch <= len(args.update_freq):
