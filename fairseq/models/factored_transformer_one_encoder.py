@@ -157,6 +157,7 @@ class FactoredTransformerOneEncoderModel(FairseqFactoredOneEncoderModel):
             encoder_embed_tokens[src] = build_embedding(
                 src_dict, args.encoder_embed_dim // len(task.args.lang_pairs), args.encoder_embed_path
             )
+            if torch.cuda.is_available(): encoder_embed_tokens[src].cuda()
             '''
             encoder_embed_tokens_ = build_embedding(
                 src_dict, args.encoder_embed_dim, args.encoder_embed_path
