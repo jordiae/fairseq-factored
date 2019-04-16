@@ -199,7 +199,7 @@ def factored_transformer_iwslt_de_en(args):
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
     args.factor_encoder_embed_dim = 32
-    args.factor = 'de_postags'#_at'
+    args.factor = 'de_postags_at'
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
@@ -207,7 +207,7 @@ def factored_transformer_iwslt_de_en(args):
     base_factored_architecture(args)
 
 @register_model_architecture('factored_transformer', 'test_factored_transformer_iwslt_de_en')
-def factored_transformer_iwslt_de_en(args):
+def test_factored_transformer_iwslt_de_en(args):
     '''
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 64)
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 128)
@@ -230,13 +230,16 @@ def factored_transformer_iwslt_de_en(args):
     args.decoder_layers = getattr(args, 'decoder_layers', 1)
     base_factored_architecture(args)
     '''
-    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 8)
-    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 16)
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 32)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 64)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)
     args.encoder_layers = getattr(args, 'encoder_layers', 1)
 
-    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 16)
-    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 32)
+    args.factor_encoder_embed_dim = 32
+    args.factor = 'de_postags_at'
+
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 64)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 12)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
     args.decoder_layers = getattr(args, 'decoder_layers', 1)
     base_factored_architecture(args)
