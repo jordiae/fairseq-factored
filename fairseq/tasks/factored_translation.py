@@ -198,10 +198,10 @@ class FactoredTranslationTask(FairseqTask):
     def build_model(self, args):
         from fairseq import models
         model = models.build_model(args, self)
-        if not args.multiple_encoders and not isinstance(model, FairseqFactoredOneEncoderModel):
-            raise ValueError('FactoredTranslationTask with multiple encoders requires a '
+        if args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredOneEncoderModel):
+            raise ValueError('FactoredTranslationTask with one encoder requires a '
                              'FairseqFactoredOneEncoderModel architecture')
-        if args.multiple_encoders and not isinstance(model, FairseqFactoredMultiModel):
+        if not args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredMultiModel):
             raise ValueError('FactoredTranslationTask with multiple encoders requires a '
                              'FairseqFactoredMultiModel architecture')
         return model
@@ -402,3 +402,6 @@ class FactoredTranslationTask(FairseqTask):
     @property
     def target_dictionary(self):
         return self.dicts[self.args.target_lang]
+
+    def sort_lang_pair(self, lang_pair):
+        return '-'.join(sorted(lang_pair.split('-')))

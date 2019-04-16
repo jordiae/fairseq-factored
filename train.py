@@ -108,8 +108,8 @@ def main(args):
 def train(args, trainer, task, epoch_itr):
     """Train the model for one epoch."""
     if type(task) is tasks.factored_translation.FactoredTranslationTask:  # factored
-        factors_to_freeze = list({x for lang_pair in [args.factors_to_freeze] for x in lang_pair.split(',')})
-        if factors_to_freeze is not None:
+        if args.factors_to_freeze is not None:
+            factors_to_freeze = list({x for lang_pair in [args.factors_to_freeze] for x in lang_pair.split(',')})
             if epoch_itr.epoch == args.freeze_factors_epoch:
                 for factor in factors_to_freeze:
                     print('Freezing', factor)
