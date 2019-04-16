@@ -95,6 +95,9 @@ def filter_by_size(indices, size_fn, max_positions, raise_exception=False):
                 idx_size[key] <= max_positions[key] for key in intersect_keys
             )
         else:
+            if isinstance(size_fn(idx), dict): # factored one encoder
+                return all(a is None or b is None or a <= b
+                           for a, b in zip(list(size_fn(idx).values())[0], max_positions))
             return all(a is None or b is None or a <= b
                        for a, b in zip(size_fn(idx), max_positions))
 
