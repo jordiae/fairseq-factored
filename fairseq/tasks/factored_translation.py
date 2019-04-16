@@ -22,7 +22,7 @@ from fairseq.data import (
     FactoredLanguagePairDataset,
     RoundRobinZipDatasets,
 )
-from fairseq.models import FairseqFactoredMultiModel
+from fairseq.models import FairseqFactoredMultiModel, FairseqFactoredOneEncoderModel
 
 from . import FairseqTask, register_task
 
@@ -81,6 +81,8 @@ class FactoredTranslationTask(FairseqTask):
         #                    help='name of the factor the embeddings of which will be reduced. Default: undefined (no reduction). Notice that it only works with factored_transformer_iwslt_de_en architecture.')
         parser.add_argument('--freeze-factors-epoch', default=10, type=int, metavar='N',
                             help='Freeze training of factors starting at the required epoch (only for --factors-to-freeze). Default: 10.')
+        parser.add_argument('--multiple-encoders', default='True', type=str, metavar='BOOL',
+                            help='whether each factor has its own encoder (default: True).')
         # fmt: on
 
     def __init__(self, args, dicts, training):
@@ -196,8 +198,12 @@ class FactoredTranslationTask(FairseqTask):
     def build_model(self, args):
         from fairseq import models
         model = models.build_model(args, self)
-        if not isinstance(model, FairseqFactoredMultiModel):
-            raise ValueError('FactoredTranslationTask requires a FairseqFactoredMultiModel architecture')
+        if not args.multiple_encoders and not isinstance(model, FairseqFactoredOneEncoderModel):
+            raise ValueError('FactoredTranslationTask with multiple encoders requires a '
+                             'FairseqFactoredOneEncoderModel architecture')
+        if args.multiple_encoders and not isinstance(model, FairseqFactoredMultiModel):
+            raise ValueError('FactoredTranslationTask with multiple encoders requires a '
+                             'FairseqFactoredMultiModel architecture')
         return model
 
     def train_step(self, sample, model, criterion, optimizer, ignore_grad=False):

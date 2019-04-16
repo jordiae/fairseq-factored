@@ -199,7 +199,7 @@ def factored_transformer_iwslt_de_en(args):
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
     args.factor_encoder_embed_dim = 32
-    args.factor = 'de_postags_at'
+    args.factor = 'de_postags'#_at'
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
