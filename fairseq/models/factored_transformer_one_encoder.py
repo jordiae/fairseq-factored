@@ -155,7 +155,7 @@ class FactoredTransformerOneEncoderModel(FairseqFactoredOneEncoderModel):
             src_dict = dicts[src]
             src_dicts[src] = src_dict
             encoder_embed_tokens[src] = build_embedding(
-                src_dict, args.encoder_embed_dim // len(task.args.lang_pairs), args.encoder_embed_path
+                src_dict, args.encoder_embed_dim_sizes[src],args.encoder_embed_path #args.encoder_embed_dim_sizes // len(task.args.lang_pairs), args.encoder_embed_path
             )
             if torch.cuda.is_available(): encoder_embed_tokens[src].cuda()
             '''
@@ -209,7 +209,8 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
         self.embed_tokens = encoder_embed_tokens
         self.embed_scale = math.sqrt(embed_dim)
         self.embed_positions = PositionalEmbedding(
-            args.max_source_positions, embed_dim // len(self.srcs), self.padding_idx, #embed_dim, self.padding_idx,
+            args.max_source_positions, embed_dim, self.padding_idx,
+            #args.max_source_positions, embed_dim // len(self.srcs), self.padding_idx, #embed_dim, self.padding_idx,
             left_pad=left_pad,
             learned=args.encoder_learned_pos,
         ) if not args.no_token_positional_embeddings else None
@@ -261,7 +262,7 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
 
         #x = self.embed_scale * self.embed_tokens(src_tokens)
         if self.embed_positions is not None:
-
+            '''
             positions = None
             i = 0
             for lang in self.srcs:
@@ -273,7 +274,8 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
                 i += 1
             #x += self.embed_positions(src_tokens)
             x += positions
-
+            '''
+            x += self.embed_positions(src_tokens[0])
             #x += self.embed_positions(src_tokens[0])
         #print(x.shape)
         x = F.dropout(x, p=self.dropout, training=self.training)
@@ -801,12 +803,13 @@ def factored_one_encoder_base_architecture(args):
 
 @register_model_architecture('factored_transformer_one_encoder', 'factored_transformer_one_encoder_iwslt_de_en')
 def factored_one_encoder_iwslt_de_en(args):
-    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 1024)
-    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 2048)
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 544)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1088)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
-    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 1024)
-    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 2048)
+    args.encoder_embed_dim_sizes = [512, 32]#{'de': 512, 'de_postags_at': 32}
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
     args.decoder_layers = getattr(args, 'decoder_layers', 6)
     factored_one_encoder_base_architecture(args)
@@ -841,6 +844,20 @@ def test_factored_one_encoder_transformer_iwslt_de_en(args):
     args.encoder_layers = getattr(args, 'encoder_layers', 1)
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 16)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 32)
+    args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
+    args.decoder_layers = getattr(args, 'decoder_layers', 1)
+    factored_one_encoder_base_architecture(args)
+
+
+@register_model_architecture('factored_transformer_one_encoder', 'test2_factored_transformer_one_encoder_iwslt_de_en')
+def test2_factored_one_encoder_transformer_iwslt_de_en(args):
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 48)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 96)
+    args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)
+    args.encoder_embed_dim_sizes = {'de': 32, 'de_postags': 16}
+    args.encoder_layers = getattr(args, 'encoder_layers', 1)
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 48)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 96)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
     args.decoder_layers = getattr(args, 'decoder_layers', 1)
     factored_one_encoder_base_architecture(args)
