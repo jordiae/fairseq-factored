@@ -807,7 +807,7 @@ def factored_one_encoder_iwslt_de_en(args):
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1088)
     args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 4)
     args.encoder_layers = getattr(args, 'encoder_layers', 6)
-    args.encoder_embed_dim_sizes = [512, 32]#{'de': 512, 'de_postags_at': 32}
+    args.encoder_embed_dim_sizes = {'de': 512, 'de_postags_at': 32} #[512, 32]#{'de': 512, 'de_postags_at': 32}
     args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 544)
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1088)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
