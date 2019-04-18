@@ -139,13 +139,31 @@ def get_synsets(chunk, flush_log, verbose):
                            'globalScore': globalScore, 'coherenceScore': coherenceScore, 'DBpediaURL': DBpediaURL,
                            'BabelNetURL': BabelNetURL, 'tfStart': tfStart, 'tfEnd': tfEnd}
                 '''
-                #new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd}
-                new_syn = [synsetId, cfStart, cfEnd]
+                # new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd}
+                '''
                 for element in new_syn:
                     if new_syn[element] is None:
                         if verbose:
                             print(element, 'is None!', flush=flush_log)
                         return None
+                '''
+                new_syn = [synsetId, cfStart, cfEnd]
+                empty = False
+                if synsetId is None or synsetId == '':
+                    if verbose:
+                        print('synsetId is None or empty string!', flush=flush_log)
+                    empty = True
+                if synsetId is None or synsetId == '':
+                    if verbose:
+                        print('synsetId is None or empty string!', flush=flush_log)
+                    empty = True
+                if synsetId is None or synsetId == '':
+                    if verbose:
+                        print('synsetId is None or empty string!', flush=flush_log)
+                    empty = True
+                if empty:
+                    return None
+
                 synsets.append(new_syn)
             return synsets
         else:
