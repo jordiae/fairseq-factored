@@ -128,9 +128,14 @@ def get_synsets(chunk, flush_log, verbose):
                 print('coherenceScore'+ "\t" +str(result.get('coherenceScore')))
                 
                 '''
+
+                '''
                 new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd, 'source': source,
                            'globalScore': globalScore, 'coherenceScore': coherenceScore, 'DBpediaURL': DBpediaURL,
                            'BabelNetURL': BabelNetURL, 'tfStart': tfStart, 'tfEnd': tfEnd}
+                '''
+                #new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd}
+                new_syn = [synsetId, cfStart, cfEnd]
                 for element in new_syn:
                     if new_syn[element] is None:
                         if verbose:
