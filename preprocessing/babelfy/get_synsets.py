@@ -1,5 +1,7 @@
 # Based in https://github.com/NadaBen/babelfy/blob/master/babelfy.ipynb
 import urllib
+import urllib.parse
+import urllib.request
 import json
 import gzip
 
@@ -41,13 +43,16 @@ def get_chunks(s, n_chars):
 
 def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying = True):
     chunks = chunks[restore:]
-    with open(file_path, 'r') as file:
+    with open(file_path, 'w') as file:
         if restore == 0:
             file.write('[')
         if restore == len(chunks) - 1:
             print('Already written until', restore)
             return
-        for index, chunk in chunks:
+        for index, chunk in enumerate(chunks):
+            if index == 995:
+                print('LIMIT?')
+                exit()
             if index < restore:
                 continue
             print('chunk', index+1, 'of', len(chunks), 'at', dataset_name)
