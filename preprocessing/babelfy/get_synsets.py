@@ -52,6 +52,9 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=T
         for index, chunk in enumerate(chunks):
             if index == 466:
                 print('LIMIT?', flush=flush_log)
+                print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
+                print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
+                print(chunk, flush=flush_log)
                 exit()
             if index < restore:
                 continue
@@ -66,6 +69,8 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=T
                         synsets = get_synsets(chunk, flush_log, verbose=False)
                 else:
                     print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
+                    print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
+                    print(chunk, flush=flush_log)
                     exit()
             else:
                 file.write(str(synsets))
