@@ -41,31 +41,31 @@ def get_chunks(s, n_chars):
     return chunks
 
 
-def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying = True):
+def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True):
     chunks = chunks[restore:]
-    with open(file_path, 'w') as file:
+    with open(file_path, 'a') as file:
         if restore == 0:
             file.write('[')
         if restore == len(chunks) - 1:
-            print('Already written until', restore)
+            print('Already written until', restore, flush=flush_log)
             return
         for index, chunk in enumerate(chunks):
-            if index == 995:
-                print('LIMIT?')
+            if index == 466:
+                print('LIMIT?', flush=flush_log)
                 exit()
             if index < restore:
                 continue
-            print('chunk', index+1, 'of', len(chunks), 'at', dataset_name)
-            synsets = get_synsets(chunk)
+            print('chunk', index+1, 'of', len(chunks), 'at', dataset_name, flush=flush_log)
+            synsets = get_synsets(chunk, flush_log, verbose=True)
             if synsets is None:
                 if keep_trying:
-                    print('Error! Re-trying...')
+                    print('Error! Re-trying...', flush=flush_log)
                     currentDT = datetime.datetime.now()
-                    print('Started re-trying at', str(currentDT))
+                    print('Started re-trying at', str(currentDT), flush=flush_log)
                     while synsets is not None:
-                        synsets = get_synsets(chunk)
+                        synsets = get_synsets(chunk, flush_log, verbose=False)
                 else:
-                    print('Last chunk not written! Restore should be set to', index, 'next time')
+                    print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
                     exit()
             else:
                 file.write(str(synsets))
@@ -73,8 +73,7 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying =
         if index == len(chunks) - 1:
             file.write(']')
 
-
-def get_synsets(chunk):
+def get_synsets(chunk, flush_log, verbose):
     params = {
         'text': chunk,
         'lang': LANG_BABEL,
@@ -89,7 +88,8 @@ def get_synsets(chunk):
     try:
         request.add_header('Accept-encoding', 'gzip')
     except Exception as exception:
-        print(exception)
+        if verbose:
+            print(exception, flush=flush_log)
         return None
     response = urllib.request.urlopen(request)
     try:
@@ -133,16 +133,19 @@ def get_synsets(chunk):
                            'BabelNetURL': BabelNetURL, 'tfStart': tfStart, 'tfEnd': tfEnd}
                 for element in new_syn:
                     if new_syn[element] is None:
-                        print(element, 'is None!')
+                        if verbose:
+                            print(element, 'is None!', flush=flush_log)
                         return None
                 synsets.append(new_syn)
             return synsets
         else:
-            print('Not GZIP!')
+            if verbose:
+                print('Not GZIP!', flush=flush_log)
             return None
     except Exception as exception:
-        print('failed at reading the response!')
-        print(exception)
+        if verbose:
+            print('failed at reading the response!', flush=flush_log)
+            print(exception, flush=flush_log)
         return None
 
 
