@@ -153,7 +153,7 @@ class FactoredTransformerModel(FairseqFactoredMultiModel):
                     else:  # compatibility with old models
                         if lang == 'de_postags_at':
                             args2 = deepcopy(args)
-                            args2.encoder_embed_dim = args.factor_encoder_embed_dim
+                            args2.encoder_embed_dim = 32
                             args2.encoder_ffn_embed_dim = args.factor_encoder_embed_dim * 2
                             encoder_embed_tokens = build_embedding(
                                 task.dicts[lang], args2.encoder_embed_dim, args.encoder_embed_path
