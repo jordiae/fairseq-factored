@@ -120,7 +120,7 @@ class SequenceGenerator(object):
                                                                              torch.unsqueeze(
                                                                                  sample[lang_pair]['net_input'][
                                                                                      'src_tokens'], 0)))
-            sample = mixed_sample
+                sample = mixed_sample
             #print(sample)
             s = utils.move_to_cuda(sample) if cuda else sample
             if 'net_input' not in s:
