@@ -198,17 +198,12 @@ class FactoredTranslationTask(FairseqTask):
     def build_model(self, args):
         from fairseq import models
         model = models.build_model(args, self)
-        if hasattr(args, 'multiple_encoders'):
-            if args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredOneEncoderModel):
-                raise ValueError('FactoredTranslationTask with one encoder requires a '
-                                 'FairseqFactoredOneEncoderModel architecture')
-            if not args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredMultiModel):
-                raise ValueError('FactoredTranslationTask with multiple encoders requires a '
-                                 'FairseqFactoredMultiModel architecture')
-        else: # compatibility with old models
-            if not isinstance(model, FairseqFactoredMultiModel):
-                raise ValueError('FactoredTranslationTask with multiple encoders requires a '
-                                 'FairseqFactoredMultiModel architecture')
+        if args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredOneEncoderModel):
+            raise ValueError('FactoredTranslationTask with one encoder requires a '
+                             'FairseqFactoredOneEncoderModel architecture')
+        if not args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredMultiModel):
+            raise ValueError('FactoredTranslationTask with multiple encoders requires a '
+                             'FairseqFactoredMultiModel architecture')
         return model
 
     def train_step(self, sample, model, criterion, optimizer, ignore_grad=False):
