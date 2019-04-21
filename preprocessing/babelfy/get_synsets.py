@@ -34,14 +34,14 @@ def get_chunks(s, n_chars):
             current_char_count = new_count
         else:
             chunks.append(current_chunk)
-            current_chunk = ''
-            current_char_count = 0
+            current_chunk = line + '\n'
+            current_char_count = len(line) + 1
     if len(current_chunk) > 0:
         chunks.append(current_chunk)
     return chunks
 
 
-def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True):
+def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=999):
     chunks = chunks[restore:]
     with open(file_path, 'a') as file:
         if restore == 0:
@@ -49,8 +49,9 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=T
         if restore == len(chunks) - 1:
             print('Already written until', restore, flush=flush_log)
             return
+        index = None
         for index, chunk in enumerate(chunks):
-            if index == 466:
+            if index == limit:
                 print('LIMIT?', flush=flush_log)
                 print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
                 print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
@@ -153,13 +154,13 @@ def get_synsets(chunk, flush_log, verbose):
                     if verbose:
                         print('synsetId is None or empty string!', flush=flush_log)
                     empty = True
-                if synsetId is None or synsetId == '':
+                if cfStart is None or cfStart == '':
                     if verbose:
-                        print('synsetId is None or empty string!', flush=flush_log)
+                        print('cfStart is None or empty string!', flush=flush_log)
                     empty = True
-                if synsetId is None or synsetId == '':
+                if cfEnd is None or cfEnd == '':
                     if verbose:
-                        print('synsetId is None or empty string!', flush=flush_log)
+                        print('cfEnd is None or empty string!', flush=flush_log)
                     empty = True
                 if empty:
                     return None
