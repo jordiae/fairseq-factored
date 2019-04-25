@@ -11,6 +11,7 @@ import os
 
 import datetime
 
+import time
 
 TOKENIZED_TEXT_FILES_PATH = os.path.join('..', '..', '..', '..', 'data', 'iwslt14.tokenized.de-en', 'tmp')
 LANG = 'de'
@@ -21,6 +22,7 @@ KEY = 'KEY'
 CANDS = 'TOP'
 #  TH = '.01'
 MATCH = 'EXACT_MATCHING'
+REQ_LIMIT = 5000
 
 
 def get_chunks(s, n_chars):
@@ -41,7 +43,7 @@ def get_chunks(s, n_chars):
     return chunks
 
 
-def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=999):
+def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=REQ_LIMIT):
     chunks = chunks[restore:]
     with open(file_path, 'a') as file:
         if restore == 0:
@@ -51,12 +53,15 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=T
             return
         index = None
         for index, chunk in enumerate(chunks):
-            if index == limit:
+            if index != 0 and index % (limit-1) == 0:
                 print('LIMIT?', flush=flush_log)
                 print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
                 print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
                 print(chunk, flush=flush_log)
-                exit()
+                print(flush=flush_log)
+                print('Zzz...', flush=flush_log)
+                time.sleep(60*60*24 + 60)
+                #exit()
             if index < restore:
                 continue
             print('chunk', index+1, 'of', len(chunks), 'at', dataset_name, flush=flush_log)
