@@ -56,7 +56,7 @@ def assign_synsets(synsets, text):
             word_index = index_dict[start_synset]
         except:  # if non-alphanumeric chars break tokenization at the beginning of the word
             retry_count = 0
-            start_synset += 1
+            start_synset -= 1
             max_retry = 5
             while retry_count < max_retry:
                 retry_count += 1
@@ -201,3 +201,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
