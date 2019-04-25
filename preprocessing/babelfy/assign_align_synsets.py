@@ -1,12 +1,3 @@
-# Based in https://github.com/NadaBen/babelfy/blob/master/babelfy.ipynb
-import urllib
-import urllib.parse
-import urllib.request
-import json
-import gzip
-
-from io import BytesIO
-
 import os
 
 import datetime
@@ -21,13 +12,7 @@ TOKENIZED_TEXT_FILES_PATH = os.path.join('..', '..', '..', '..', 'data', 'iwslt1
 BPE_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14-preprocessed-joined')
 # PREPROCESSED_TEXT_FILES_PATH = os.path.join('..', '..', '..', '..', 'data', 'iwslt14-preprocessed-joined')
 LANG = 'de'
-LANG_BABEL = LANG.upper()
 CHAR_LIMIT = 3500
-SERVICE_URL = 'https://babelfy.io/v1/disambiguate'
-KEY = 'KEY'
-CANDS = 'TOP'
-#  TH = '.01'
-MATCH = 'EXACT_MATCHING'
 
 
 def get_chunks(s, n_chars):
@@ -48,143 +33,6 @@ def get_chunks(s, n_chars):
     return chunks
 
 
-def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=999):
-    chunks = chunks[restore:]
-    with open(file_path, 'a') as file:
-        if restore == 0:
-            file.write('[')
-        if restore == len(chunks) - 1:
-            print('Already written until', restore, flush=flush_log)
-            return
-        index = None
-        for index, chunk in enumerate(chunks):
-            if index == limit:
-                print('LIMIT?', flush=flush_log)
-                print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
-                print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
-                print(chunk, flush=flush_log)
-                exit()
-            if index < restore:
-                continue
-            print('chunk', index+1, 'of', len(chunks), 'at', dataset_name, flush=flush_log)
-            synsets = get_synsets(chunk, flush_log, verbose=True)
-            if synsets is None:
-                if keep_trying:
-                    print('Error! Re-trying...', flush=flush_log)
-                    currentDT = datetime.datetime.now()
-                    print('Started re-trying at', str(currentDT), flush=flush_log)
-                    while synsets is not None:
-                        synsets = get_synsets(chunk, flush_log, verbose=False)
-                else:
-                    print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
-                    print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
-                    print(chunk, flush=flush_log)
-                    exit()
-            else:
-                file.write(str(synsets))
-                file.write(',')
-        if index == len(chunks) - 1:
-            file.write(']')
-
-def get_synsets(chunk, flush_log, verbose):
-    params = {
-        'text': chunk,
-        'lang': LANG_BABEL,
-        'key': KEY,
-        'cands': CANDS,
-        'match': MATCH
-        # 'th': th
-    }
-
-    url = SERVICE_URL + '?' + urllib.parse.urlencode(params)
-    request = urllib.request.Request(url)
-    try:
-        request.add_header('Accept-encoding', 'gzip')
-    except Exception as exception:
-        if verbose:
-            print(exception, flush=flush_log)
-        return None
-    response = urllib.request.urlopen(request)
-    try:
-        if response.info().get('Content-Encoding') == 'gzip':
-            buf = BytesIO(response.read())
-            f = gzip.GzipFile(fileobj=buf)
-            data = json.loads(f.read().decode('utf-8'))
-            synsets = []
-            for result in data:
-                # retrieving token fragment
-                tokenFragment = result.get('tokenFragment')
-                tfStart = tokenFragment.get('start')
-                tfEnd = tokenFragment.get('end')
-                # print (str(tfStart) + "\t" + str(tfEnd))
-
-                # retrieving char fragment
-                charFragment = result.get('charFragment')
-                cfStart = charFragment.get('start')
-                cfEnd = charFragment.get('end')
-                # print (str(cfStart) + "\t" + str(cfEnd))
-
-                # retrieving BabelSynset ID
-                synsetId = result.get('babelSynsetID')
-                # print(synsetId, tfStart, tfEnd)
-
-                source = str(result.get('source'))
-                DBpediaURL = str(result.get('DBpediaURL'))
-                BabelNetURL = str(result.get('BabelNetURL'))
-                globalScore =  str(result.get('globalScore'))
-                coherenceScore = str(result.get('coherenceScore'))
-                '''
-                print ('source'+ "\t" +result.get('source'))
-                print('DBpediaURL'+ "\t" +result.get('DBpediaURL'))
-                print('BabelNetURL'+ "\t" +result.get('BabelNetURL'))
-                print('globalScore'+ "\t" +str(result.get('globalScore')))
-                print('coherenceScore'+ "\t" +str(result.get('coherenceScore')))
-                
-                '''
-
-                '''
-                new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd, 'source': source,
-                           'globalScore': globalScore, 'coherenceScore': coherenceScore, 'DBpediaURL': DBpediaURL,
-                           'BabelNetURL': BabelNetURL, 'tfStart': tfStart, 'tfEnd': tfEnd}
-                '''
-                # new_syn = {'synsetId': synsetId, 'cfStart': cfStart, 'cfEnd': cfEnd}
-                '''
-                for element in new_syn:
-                    if new_syn[element] is None:
-                        if verbose:
-                            print(element, 'is None!', flush=flush_log)
-                        return None
-                '''
-                new_syn = [synsetId, cfStart, cfEnd]
-                empty = False
-                if synsetId is None or synsetId == '':
-                    if verbose:
-                        print('synsetId is None or empty string!', flush=flush_log)
-                    empty = True
-                if cfStart is None or cfStart == '':
-                    if verbose:
-                        print('cfStart is None or empty string!', flush=flush_log)
-                    empty = True
-                if cfEnd is None or cfEnd == '':
-                    if verbose:
-                        print('cfEnd is None or empty string!', flush=flush_log)
-                    empty = True
-                if empty:
-                    return None
-
-                synsets.append(new_syn)
-            return synsets
-        else:
-            if verbose:
-                print('Not GZIP!', flush=flush_log)
-            return None
-    except Exception as exception:
-        if verbose:
-            print('failed at reading the response!', flush=flush_log)
-            print(exception, flush=flush_log)
-        return None
-
-
 def align_indices(text_chunks, parsed_chunks):
     cumulative_index = 0
     for text_chunk, parsed_chunk in zip(text_chunks, parsed_chunks):
@@ -200,9 +48,26 @@ def assign_synsets(synsets, text):
     assigned_synsets = [None] * len(indices_split)
     index_dict = dict(zip([a for a, b in indices_split], list(range(0, len(indices_split)))))
     synset_dict = {}
+    i = -1
     for synset, start_synset, end_synset in synsets:
+        i += 1
         end_synset += 1  # Babelfy synsets have end of word as subset, unlike Python slices/indices.
-        word_index = index_dict[start_synset]
+        try:
+            word_index = index_dict[start_synset]
+        except:  # if non-alphanumeric chars break tokenization at the beginning of the word
+            retry_count = 0
+            start_synset += 1
+            max_retry = 5
+            while retry_count < max_retry:
+                retry_count += 1
+                try:
+                    word_index = index_dict[start_synset]
+                    break
+                except:
+                    start_synset -= 1
+                    continue
+            if retry_count == max_retry:
+                raise Exception('Malformed token at the beginning of the word!', start_synset, i)
         start_word, end_word = indices_split[word_index]
         if start_word == start_synset and end_word == end_synset:
             if assigned_synsets[word_index] is None:
@@ -227,7 +92,19 @@ def assign_synsets(synsets, text):
                 word_index += 1
                 start_word, end_word = indices_split[word_index]
             synset_dict[synset] = synset_count
+        elif start_word == start_synset:  # if non-alphanumeric chars break tokenization at the end of the word
+            start_word2, end_word2 = indices_split[word_index+1]
+            if start_word2 > end_synset:
+                if assigned_synsets[word_index] is None:
+                    assigned_synsets[word_index] = [synset]
+                else:
+                    assigned_synsets[word_index].append(synset)
+                synset_dict[synset] = 1
+            else:
+                print(synset, start_synset, end_synset, word_index)
+                raise Exception('Discarded synset (malformed offset at the beginning)!')
         else:
+            print(synset, start_synset, end_synset, word_index)
             raise Exception('Discarded synset!')
     result = []
     for index, token in enumerate(text.split()):
@@ -238,10 +115,11 @@ def assign_synsets(synsets, text):
             chosen_synset = None
             for synset in assigned_synsets[index]:
                 if synset_dict[synset] > max:
-                    max = synset_dict
+                    max = synset_dict[synset]
                     chosen_synset = synset
-            assigned_synsets.append(chosen_synset)
+            result.append(chosen_synset)
     return result
+
 
 
 def flatten(l):
