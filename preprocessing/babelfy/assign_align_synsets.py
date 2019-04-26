@@ -57,7 +57,7 @@ def assign_synsets(synsets, text):
         except:  # if non-alphanumeric chars break tokenization at the beginning of the word
             retry_count = 0
             start_synset -= 1
-            max_retry = 5
+            max_retry = 78  # changed to 78 for training. For test and valid, 5 was enough
             while retry_count < max_retry:
                 retry_count += 1
                 try:
