@@ -45,14 +45,11 @@ def get_chunks(s, n_chars):
 
 def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=REQ_LIMIT):
     chunks = chunks  # [restore:]
-    if restore != 0:
-        with open(file_path, 'r') as file:
-            old_synsets = file.read()
-        with open(file_path, 'w') as file:
-            file.write(old_synsets[:-1] + ',')
     with open(file_path, 'a') as file:
         if restore == 0:
             file.write('[')
+        else:
+            file.write(',')
         if restore == len(chunks) - 1:
             print('Already written until', restore, flush=flush_log)
             return
