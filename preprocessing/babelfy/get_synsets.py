@@ -44,7 +44,7 @@ def get_chunks(s, n_chars):
 
 
 def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=True, flush_log=True, limit=REQ_LIMIT):
-    chunks = chunks[restore:]
+    chunks = chunks  # [restore:]
     with open(file_path, 'a') as file:
         if restore == 0:
             file.write('[')
@@ -53,7 +53,7 @@ def write_synsets_chunks(chunks, restore, file_path, dataset_name, keep_trying=T
             return
         index = None
         for index, chunk in enumerate(chunks):
-            if index != 0 and index % (limit-1) == 0:
+            if index != 0 and index % (limit-1) == 0 and index != restore:
                 print('LIMIT?', flush=flush_log)
                 print('Last chunk not written! Next time restore should be set to', index, flush=flush_log)
                 print('Just in case, here you are! Last chunk NOT processed:', flush=flush_log)
