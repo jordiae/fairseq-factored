@@ -19,7 +19,7 @@ from .fairseq_model import (
     FairseqLanguageModel,  # noqa: F401
     FairseqFactoredMultiModel,
     FairseqFactoredOneEncoderModel,
-    FairseqFactoredNewMultiModel
+    # FairseqFactoredNewMultiModel
 )
 
 from .composite_encoder import CompositeEncoder  # noqa: F401
