@@ -1,4 +1,5 @@
 # Based on CompositeEncoder. Factored. Jordi Armengol Estapé.
+
 # Copyright (c) 2017-present, Facebook, Inc.
 # All rights reserved.
 #
@@ -14,15 +15,13 @@ class FactoredCompositeEncoder(FairseqEncoder):
     """
     A wrapper around a dictionary of :class:`FairseqEncoder` objects.
 
-    We run forward on each encoder and return a dictionary of outputs. The first
-    encoder's dictionary is used for initialization.
+    We run forward on each encoder and return their concatenation.
 
     Args:
         encoders (dict): a dictionary of :class:`FairseqEncoder` objects.
     """
 
     def __init__(self, encoders):
-        #super().__init__(next(iter(encoders.values())).dictionary)
         super().__init__(None)
         self.encoders = encoders
         for key in self.encoders:
@@ -40,50 +39,14 @@ class FactoredCompositeEncoder(FairseqEncoder):
             dict:
                 the outputs from each Encoder
         """
-        '''
-        encoder_out = {}
-        for key in self.encoders:
-            encoder_out[key] = self.encoders[key](src_tokens, src_lengths)
-        return encoder_out
-        '''
         concat_encoder = None
-        #encoder_out = {}
-        #print('FORWARD')
-        #i = 0
         for index, key in enumerate(self.encoders):
-            #print(i)
-            #i += 1
             encoder_out = self.encoders[key](src_tokens[index], src_lengths)
-            #print(key,src_tokens[index].shape)
-            #print(src_tokens[index])
-            #print()
-            #encoder_out[key] = self.encoders[key](src_tokens[index], src_lengths
             if concat_encoder is None:
                 concat_encoder = encoder_out#['encoder_out']
             else:
-                concat = torch.cat((concat_encoder['encoder_out'], encoder_out['encoder_out']),2)
-                concat_encoder['encoder_out'] = concat#torch.cat((concat_encoder, encoder_out['encoder_out']))
-                if concat_encoder['encoder_padding_mask'] is not None:
-                    pass
-                    #concat_encoder['encoder_padding_mask'] = None
-                    '''
-                    if not torch.eq(concat_encoder['encoder_padding_mask'],encoder_out['encoder_padding_mask']).all():
-                        print('NO son iguals!')
-                    else:
-                        print('Si que ho son')
-                    '''
-                    #print(concat_encoder['encoder_padding_mask'].shape,encoder_out['encoder_padding_mask'].shape)
-                    #print('alerta',concat_encoder['encoder_padding_mask'].shape)
-                    #concat_encoder['encoder_padding_mask'] = torch.cat((concat_encoder['encoder_padding_mask'], encoder_out['encoder_padding_mask']),0)#1)
-                    #print(concat_encoder['encoder_padding_mask'].shape)
-                    #exit()
-        #print(concat_encoder['encoder_out'].shape)
-        #print(concat_encoder['encoder_out'])
-        #print('___________________')
-        #print()
-        #encoder_out = concat_encoder
-        #return encoder_out
-        #print(concat_encoder)
+                concat = torch.cat((concat_encoder['encoder_out'], encoder_out['encoder_out']), 2)
+                concat_encoder['encoder_out'] = concat
         return concat_encoder
 
     def reorder_encoder_out(self, encoder_out, new_order):
@@ -96,15 +59,6 @@ class FactoredCompositeEncoder(FairseqEncoder):
                 encoder_out['encoder_padding_mask'].index_select(0, new_order)
         return encoder_out
         # changed for inference, not training (factored)
-        '''
-        print(encoder_out)
-        print(self.encoders)
-        exit()
-        
-        for key in self.encoders:
-            encoder_out[key] = self.encoders[key].reorder_encoder_out(encoder_out[key], new_order)
-        return encoder_out
-        '''
 
     def max_positions(self):
         return min([self.encoders[key].max_positions() for key in self.encoders])
