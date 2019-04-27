@@ -1,4 +1,5 @@
 # Based on Fairseq's Multilingual translation task. By Jordi Armengol Estapé.
+
 # Copyright (c) 2017-present, Facebook, Inc.
 # All rights reserved.
 #
@@ -29,26 +30,8 @@ from . import FairseqTask, register_task
 
 @register_task('factored_translation')
 class FactoredTranslationTask(FairseqTask):
-    """A task for training multiple translation models simultaneously.
-
-    We iterate round-robin over batches from multiple language pairs, ordered
-    according to the `--lang-pairs` argument.
-
-    The training loop is roughly:
-
-        for i in range(len(epoch)):
-            for lang_pair in args.lang_pairs:
-                batch = next_batch_for_lang_pair(lang_pair)
-                loss = criterion(model_for_lang_pair(lang_pair), batch)
-                loss.backward()
-            optimizer.step()
-
-    In practice, `next_batch_for_lang_pair` is abstracted in a FairseqDataset
-    (e.g., `RoundRobinZipDatasets`) and `model_for_lang_pair` is a model that
-    implements the `FairseqMultiModel` interface.
-
-    During inference it is required to specify a single `--source-lang` and
-    `--target-lang`, instead of `--lang-pairs`.
+    """A task for factored/multi-source translation.
+    It can be used both with one or multiple encoders.
     """
 
     @staticmethod
@@ -90,7 +73,7 @@ class FactoredTranslationTask(FairseqTask):
         self.dicts = dicts
         self.langs = list(dicts.keys())
         self.training = training
-        self.seed_for_factored = np.random.randint(2**32 - 1)#np.random.RandomState(seed=None)
+        self.seed_for_factored = args.seed  # np.random.randint(2**32 - 1)#np.random.RandomState(seed=None)
 
     @classmethod
     def setup_task(cls, args, **kwargs):
@@ -210,10 +193,7 @@ class FactoredTranslationTask(FairseqTask):
         model.train()
         agg_loss, agg_sample_size, agg_logging_output = 0., 0., {}
         mixed_sample = {}
-        # lpairs = ['de-en', 'de_postags-en']
-        # train_lpairs = []
         for lang_pair in self.args.lang_pairs:
-            #train_lpairs.append(lang_pair)
             if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
                 continue
             if len(mixed_sample) == 0:
@@ -221,28 +201,8 @@ class FactoredTranslationTask(FairseqTask):
                 src_tokens = mixed_sample['net_input']['src_tokens']
                 mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens, 0) #torch.tensor(src_tokens)#.clone().detach()
             else:
-                mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'],0)))
+                mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'], 0)))
 
-            # print(sample[lang_pair])
-            # input(lang_pair)
-            '''
-            loss, sample_size, logging_output = criterion(model.models[lang_pair], sample[lang_pair])
-            if ignore_grad:
-                loss *= 0
-            optimizer.backward(loss)
-            agg_loss += loss.detach().item()
-            # TODO make summing of the sample sizes configurable
-            agg_sample_size += sample_size
-            agg_logging_output[lang_pair] = logging_output
-            '''
-        #print(mixed_sample)
-        #exit()
-        '''
-        print(mixed_sample)
-        print()
-        print()
-        print()
-        '''
         loss, sample_size, logging_output = criterion(model, mixed_sample)
         #print(sample_size)
         if ignore_grad:
@@ -252,87 +212,14 @@ class FactoredTranslationTask(FairseqTask):
         # TODO make summing of the sample sizes configurable
         agg_sample_size += sample_size
         agg_logging_output = logging_output
-        '''
-        if lpairs != train_lpairs:
-            print('FAIL (train)')
-            exit()
-        '''
-        #yy = model(**mixed_sample['net_input'])
-        #print(mixed_sample['net_input']['src_tokens'].shape,yy[0].shape)
-        #print()
-        #print(yy)
-        #import torchviz
-        #print(dict(list(model.named_parameters())))
-        #torchviz.make_dot(yy)#,params = dict(list(model.named_parameters()) + [('x', mixed_sample['net_input']['src_tokens'])]))
         return agg_loss, agg_sample_size, agg_logging_output
-        '''
-        #print(sample)
-        #exit()
-        #print(sample['de-en']['target'][0][0], sample['de_postags-en']['target'][0][0])
-        #print(sample['de-en']['id'],sample['de_postags-en']['id'])
-        # Note: even after sharing seed (FactoredLanguagePair, the first samples are always different...
-        model.train()
-        agg_loss, agg_sample_size, agg_logging_output = 0., 0., {}
-        #print(sample)
-        #exit()
-        for lang_pair in self.args.lang_pairs:
-            print({'net_input': sample})
-            print()
-            print(sample[lang_pair])
-            #if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
-            #    continue
-            # print(sample[lang_pair])
-            # input(lang_pair)
-            loss, sample_size, logging_output = criterion(model, {'net_input': sample})#criterion(model.models[lang_pair], sample[lang_pair])
-            #loss, sample_size, logging_output = criterion(model.models[lang_pair], sample[lang_pair])
-            if ignore_grad:
-                loss *= 0
-            optimizer.backward(loss)
-            agg_loss += loss.detach().item()
-            # TODO make summing of the sample sizes configurable
-            agg_sample_size += sample_size
-            agg_logging_output[lang_pair] = logging_output
-            return agg_loss, agg_sample_size, agg_logging_output
-        return agg_loss, agg_sample_size, agg_logging_output
-        '''
-        '''
-        model.train()
-        agg_loss, agg_sample_size, agg_logging_output = 0., 0., {}
-        for lang_pair in self.args.lang_pairs:
-            if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
-                continue
-            #print(sample[lang_pair])
-            #input(lang_pair)
-            loss, sample_size, logging_output = criterion(model.models[lang_pair], sample[lang_pair])
-            if ignore_grad:
-                loss *= 0
-            optimizer.backward(loss)
-            agg_loss += loss.detach().item()
-            # TODO make summing of the sample sizes configurable
-            agg_sample_size += sample_size
-            agg_logging_output[lang_pair] = logging_output
-        return agg_loss, agg_sample_size, agg_logging_output
-        '''
 
     def valid_step(self, sample, model, criterion):
         model.eval()
         with torch.no_grad():
             agg_loss, agg_sample_size, agg_logging_output = 0., 0., {}
-            '''
-            for lang_pair in self.args.lang_pairs:
-                if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
-                    continue
-                loss, sample_size, logging_output = criterion(model.models[lang_pair], sample[lang_pair])
-                agg_loss += loss.data.item()
-                # TODO make summing of the sample sizes configurable
-                agg_sample_size += sample_size
-                agg_logging_output[lang_pair] = logging_output
-            '''
             mixed_sample = {}
-            # lpairs = ['de-en', 'de_postags-en']
-            # valid_lpairs = []
             for lang_pair in self.args.lang_pairs:
-                # valid_lpairs.append(lang_pair)
                 if sample[lang_pair] is None or len(sample[lang_pair]) == 0:
                     continue
                 if len(mixed_sample) == 0:
@@ -346,11 +233,6 @@ class FactoredTranslationTask(FairseqTask):
         # TODO make summing of the sample sizes configurable
         agg_sample_size += sample_size
         agg_logging_output = logging_output
-        '''
-        if lpairs != valid_lpairs:
-            print('FAIL (valid)')
-            exit()
-        '''
         return agg_loss, agg_sample_size, agg_logging_output
 
     def init_logging_output(self, sample):
