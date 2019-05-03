@@ -141,6 +141,7 @@ def align_synsets_bpe(synsets, text_bpe):
             while '@@' in splitted_text_bpe[token_index]:
                 if splitted_synsets[tag_index] is None:
                     aligned_synsets += splitted_text_bpe[token_index]
+                    aligned_synsets += ' '
                     token_index += 1
                     if '@@' not in splitted_text_bpe[token_index]:
                         aligned_synsets += splitted_text_bpe[token_index]
