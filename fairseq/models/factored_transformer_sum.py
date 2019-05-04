@@ -183,7 +183,7 @@ def base_factored_architecture(args):
     args.share_decoders = getattr(args, 'share_decoders', True)
 
 
-@register_model_architecture('factored_transformer_sum', 'factored_transformer_iwslt_de_en_babelnet')
+@register_model_architecture('factored_transformer_sum', 'factored_transformer_sum_iwslt_de_en_babelnet')
 def factored_transformer_iwslt_de_en(args):
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1024)
