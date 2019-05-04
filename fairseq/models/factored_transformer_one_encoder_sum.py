@@ -191,7 +191,8 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
             self.srcs.append(src)
         embed_dim = 0
         for embed in self.srcs:
-            embed_dim += embed_tokens[embed].embedding_dim
+            embed_dim = embed_tokens[embed].embedding_dim
+            break
         self.padding_idx = embed_tokens[list(embed_tokens.keys())[0]].padding_idx
         self.max_source_positions = args.max_source_positions
 
@@ -241,7 +242,7 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
             i += 1
         x = self.embed_scale * x
 
-
+        yy = self.embed_positions(src_tokens[0])
         if self.embed_positions is not None:
             x += self.embed_positions(src_tokens[0])
 
@@ -760,4 +761,17 @@ def factored_one_encoder_iwslt_de_en(args):
     args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 1024)
     args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 4)
     args.decoder_layers = getattr(args, 'decoder_layers', 6)
+    factored_one_encoder_base_architecture(args)
+
+@register_model_architecture('factored_transformer_one_encoder_sum', 'test_factored_transformer_one_encoder_sum_iwslt_de_en_babelnet')
+def factored_one_encoder_iwslt_de_en(args):
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 16)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 32)
+    args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 1)
+    args.encoder_layers = getattr(args, 'encoder_layers', 1)
+    args.encoder_embed_dim_sizes = {'de': 16, 'de_postags': 16}
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 16)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 32)
+    args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 1)
+    args.decoder_layers = getattr(args, 'decoder_layers', 1)
     factored_one_encoder_base_architecture(args)
