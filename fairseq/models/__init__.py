@@ -19,6 +19,7 @@ from .fairseq_model import (
     FairseqLanguageModel,  # noqa: F401
     FairseqFactoredMultiModel,
     FairseqFactoredOneEncoderModel,
+    FairseqFactoredMultiSumModel
     # FairseqFactoredNewMultiModel
 )
 

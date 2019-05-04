@@ -14,6 +14,7 @@ import torch.nn.functional as F
 
 from . import FairseqDecoder, FairseqEncoder#, FactoredCompositeEncoder
 from .factored_composite_encoder import FactoredCompositeEncoder
+from .factored_composite_encoder_sum import FactoredCompositeEncoderSum
 from fairseq.data import Dictionary
 
 
@@ -543,3 +544,58 @@ class FairseqFactoredOneEncoderModel(BaseFairseqModel):
         """Maximum length supported by the model."""
         return (self.encoder.max_positions(), self.decoder.max_positions())
 
+
+class FairseqFactoredMultiSumModel(BaseFairseqModel):
+    """Base class for combining multiple encoder-decoder models."""
+    def __init__(self, encoders, decoder):
+        super().__init__()
+        self.encoder = FactoredCompositeEncoderSum(encoders)
+        self.decoder = decoder
+        self.keys = list(encoders.keys())
+        for key in self.keys:
+            assert isinstance(encoders[key], FairseqEncoder)
+        assert isinstance(decoder, FairseqDecoder)
+
+    @staticmethod
+    def build_shared_embeddings(
+        dicts: Dict[str, Dictionary],
+        langs: List[str],
+        embed_dim: int,
+        build_embedding: callable,
+        pretrained_embed_path: Optional[str] = None,
+    ):
+        """
+        Helper function to build shared embeddings for a set of languages after
+        checking that all dicts corresponding to those languages are equivalent.
+
+        Args:
+            dicts: Dict of lang_id to its corresponding Dictionary
+            langs: languages that we want to share embeddings for
+            embed_dim: embedding dimension
+            build_embedding: callable function to actually build the embedding
+            pretrained_embed_path: Optional path to load pretrained embeddings
+        """
+        shared_dict = dicts[langs[0]]
+        if any(dicts[lang] != shared_dict for lang in langs):
+            raise ValueError(
+                '--share-*-embeddings requires a joined dictionary: '
+                '--share-encoder-embeddings requires a joined source '
+                'dictionary, --share-decoder-embeddings requires a joined '
+                'target dictionary, and --share-all-embeddings requires a '
+                'joint source + target dictionary.'
+            )
+        return build_embedding(
+            shared_dict, embed_dim, pretrained_embed_path
+        )
+
+    def forward(self, src_tokens, src_lengths, prev_output_tokens):
+        encoder_out = self.encoder(src_tokens, src_lengths)
+        decoder_out = self.decoder(prev_output_tokens, encoder_out)
+        return decoder_out
+
+    def max_positions(self):
+        """Maximum length supported by the model."""
+        return {
+            key: (self.encoder.encoders[key].max_positions(), self.decoder.max_positions())
+            for key in self.keys
+        }

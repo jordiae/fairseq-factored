@@ -23,7 +23,7 @@ from fairseq.data import (
     FactoredLanguagePairDataset,
     RoundRobinZipDatasets,
 )
-from fairseq.models import FairseqFactoredMultiModel, FairseqFactoredOneEncoderModel
+from fairseq.models import FairseqFactoredMultiModel, FairseqFactoredOneEncoderModel, FairseqFactoredMultiSumModel
 
 from . import FairseqTask, register_task
 
@@ -66,6 +66,10 @@ class FactoredTranslationTask(FairseqTask):
                             help='Freeze training of factors starting at the required epoch (only for --factors-to-freeze). Default: 10.')
         parser.add_argument('--multiple-encoders', default='True', type=str, metavar='BOOL',
                             help='whether each factor has its own encoder (default: True).')
+        '''
+        parser.add_argument('--sum-instead-of-cat', default='False', type=str, metavar='BOOL',
+                            help='whether factors should be added instead of concatenated (default: False).')
+        '''
         # fmt: on
 
     def __init__(self, args, dicts, training):
@@ -184,9 +188,9 @@ class FactoredTranslationTask(FairseqTask):
         if args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredOneEncoderModel):
             raise ValueError('FactoredTranslationTask with one encoder requires a '
                              'FairseqFactoredOneEncoderModel architecture')
-        if not args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredMultiModel):
+        if not args.multiple_encoders == 'False' and (not isinstance(model, FairseqFactoredMultiModel) or not isinstance(model, FairseqFactoredMultiSumModel)):
             raise ValueError('FactoredTranslationTask with multiple encoders requires a '
-                             'FairseqFactoredMultiModel architecture')
+                             'FairseqFactoredMultiModel or FairseqFactoredMultiSumModel architecture')
         return model
 
     def train_step(self, sample, model, criterion, optimizer, ignore_grad=False):
