@@ -188,7 +188,7 @@ class FactoredTranslationTask(FairseqTask):
         if args.multiple_encoders == 'False' and not isinstance(model, FairseqFactoredOneEncoderModel):
             raise ValueError('FactoredTranslationTask with one encoder requires a '
                              'FairseqFactoredOneEncoderModel architecture')
-        if not args.multiple_encoders == 'False' and (not isinstance(model, FairseqFactoredMultiModel) or not isinstance(model, FairseqFactoredMultiSumModel)):
+        if not args.multiple_encoders == 'False' and (not isinstance(model, FairseqFactoredMultiModel) and not isinstance(model, FairseqFactoredMultiSumModel)):
             raise ValueError('FactoredTranslationTask with multiple encoders requires a '
                              'FairseqFactoredMultiModel or FairseqFactoredMultiSumModel architecture')
         return model
