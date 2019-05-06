@@ -2,8 +2,8 @@ import os
 
 import itertools
 
-BPE_TEXT_FILES_PATH = os.path.join('..','..','..','..','data','iwslt14-preprocessed-joined')
-# PREPROCESSED_TEXT_FILES_PATH = os.path.join('..', '..', '..', '..', 'data', 'iwslt14-preprocessed-joined')
+BPE_TEXT_FILES_PATH = os.path.join('..','..','..','data','iwslt14-preprocessed-joined')
+# PREPROCESSED_TEXT_FILES_PATH = os.path.join('..', '..', '..', 'data', 'iwslt14-preprocessed-joined')
 LANG = 'de'
 
 def assign_subword_tags(text_bpe):
