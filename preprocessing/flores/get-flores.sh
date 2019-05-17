@@ -14,3 +14,4 @@ bash prepare-neen.sh
 bash prepare-sien.sh
 
 cp -r data /home/usuaris/veu/jordi.armengol/tfg/new/data/flores
+cp -r data-bin /home/usuaris/veu/jordi.armengol/tfg/new/data/flores
