@@ -42,7 +42,6 @@ def encode_line(line):
         pass
     return None
 
-
 removed_sentences = []
 for i, lines in enumerate(zip(train_en_l, train_ne_l)):
     enc_lines = list(map(encode_line, lines))
@@ -51,6 +50,7 @@ for i, lines in enumerate(zip(train_en_l, train_ne_l)):
     else:
         removed_sentences.append(i)
 
+print(len(removed_sentences), 'sentences to remove')
 
 new_train_en_l = []
 new_train_ne_l = []
