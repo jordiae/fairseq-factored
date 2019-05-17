@@ -7,4 +7,8 @@ conda activate env
 
 pip install sacrebleu sentencepiece
 
-bash flores/download-data.sh
+cd flores
+bash download-data.sh
+
+bash prepare-neen.sh
+bash prepare-sien.sh
