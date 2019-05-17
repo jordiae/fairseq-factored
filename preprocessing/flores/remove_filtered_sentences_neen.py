@@ -16,7 +16,7 @@ train_ne_l = train_ne.splitlines()
 train_ne_bpe_l = train_ne_bpe.splitlines()
 
 min_len = 1
-max_len = 255
+max_len = 250
 
 
 def encode(x):
