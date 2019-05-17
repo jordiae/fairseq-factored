@@ -12,3 +12,5 @@ bash download-data.sh
 
 bash prepare-neen.sh
 bash prepare-sien.sh
+
+cp -r data /home/usuaris/veu/jordi.armengol/tfg/new/data/flores
