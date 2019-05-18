@@ -29,7 +29,7 @@ def tag_text(text):
     text_pos = ''
     text_dep = ''
     text_tag = ''
-    for index, line in enumerate(lines, start=1):
+    for index_line, line in enumerate(lines, start=1):
         lemmas, poss, deps, tags = tag_sentence(line)
         for (index, (lemma, pos, dep, tag)) in enumerate(zip(lemmas, poss, deps, tags)):
             if index == len(lemmas) - 1:
@@ -40,7 +40,7 @@ def tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
-        if index % 10000 == 0:
+        if index_line % 10000 == 0:
             print('Processed', index, 'sentences', flush=True)
     return text_lemma, text_pos, text_dep, text_tag
 
