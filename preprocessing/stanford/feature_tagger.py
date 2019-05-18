@@ -40,13 +40,14 @@ def tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
-        if index % 10000:
+        if index % 10000 == 0:
             print('Processed', index, 'sentences', flush=True)
     return text_lemma, text_pos, text_dep, text_tag
 
 
 def main():
     for dataset in ['train', 'valid', 'test']:
+        print('Loaded', os.path.join(PATH, dataset + '.' + LANG), flush=True)
         with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
             text = file.read()
         text_lemma, text_pos, text_dep, text_tag = tag_text(text)
