@@ -2,7 +2,7 @@ import stanfordnlp
 from spacy_stanfordnlp import StanfordNLPLanguage
 import os
 
-PATH = ''
+PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data/wiki_ne_en_bpe5000'
 LANG = 'en'
 
 snlp = stanfordnlp.Pipeline(lang=LANG)
