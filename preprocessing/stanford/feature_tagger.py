@@ -45,16 +45,16 @@ def tag_text(text):
 
 def main():
     for dataset in ['train', 'valid', 'test']:
-        with open(os.path.join(PATH, dataset + LANG), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
             text = file.read()
         text_lemma, text_pos, text_dep, text_tag = tag_text(text)
-        with open(os.path.join(PATH, dataset + LANG + '_lemmas'), 'w') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG + '_lemmas'), 'w') as file:
             file.write(text_lemma)
-        with open(os.path.join(PATH, dataset + LANG + '_pos'), 'w') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG + '_pos'), 'w') as file:
             file.write(text_pos)
-        with open(os.path.join(PATH, dataset + LANG + '_deps'), 'w') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG + '_deps'), 'w') as file:
             file.write(text_dep)
-        with open(os.path.join(PATH, dataset + LANG + '_tags'), 'w') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG + '_tags'), 'w') as file:
             file.write(text_tag)
 
 
