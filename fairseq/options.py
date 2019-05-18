@@ -300,7 +300,7 @@ def add_common_eval_args(group):
     group.add_argument('--path', metavar='FILE',
                        help='path(s) to model file(s), colon separated')
     group.add_argument('--remove-bpe', nargs='?', const='@@ ', default=None,
-                       help='remove BPE tokens before scoring')
+                       help='remove BPE tokens before scoring (can be set to sentencepiece)')
     group.add_argument('--quiet', action='store_true',
                        help='only print final scores')
     group.add_argument('--model-overrides', default="{}", type=str, metavar='DICT',
