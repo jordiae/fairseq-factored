@@ -40,8 +40,8 @@ def tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
-        if index_line % 10000 == 0:
-            print('Processed', index, 'sentences', flush=True)
+        if index_line % 1000 == 0:
+            print('Processed', index_line, 'sentences', flush=True)
     return text_lemma, text_pos, text_dep, text_tag
 
 
