@@ -6,8 +6,7 @@ PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data/wiki_ne_en_bpe
 LANG = 'en'
 
 snlp = stanfordnlp.Pipeline(lang=LANG)
-snlp.use_gpu = False
-nlp = StanfordNLPLanguage(snlp, disable=["ner"])
+nlp = StanfordNLPLanguage(snlp)
 
 
 def tag_sentence(sentence):
@@ -47,13 +46,7 @@ def tag_text(text):
             text_tag += tag + sep
         if index_line % 1000 == 0:
             print('Processed', index_line, 'sentences', flush=True)
-<<<<<<< HEAD
     return text_token, text_lemma, text_pos, text_dep, text_tag
-=======
-            # break
-        # break
-    return text_lemma, text_pos, text_dep, text_tag
->>>>>>> cc8445f935ad92e956830970fa58ed676a0e08f1
 
 
 def tag_doc(doc):
@@ -73,12 +66,8 @@ def tag_doc(doc):
 
 def efficient_tag_text(text):
     lines = text.splitlines()
-<<<<<<< HEAD
     docs = nlp.pipe(lines)
     text_token = ''
-=======
-    docs = nlp.pipe(lines, n_threads=4, batch_size=4000)
->>>>>>> cc8445f935ad92e956830970fa58ed676a0e08f1
     text_lemma = ''
     text_pos = ''
     text_dep = ''
@@ -97,13 +86,7 @@ def efficient_tag_text(text):
             text_tag += tag + sep
         if index_line % 1000 == 0:
             print('Processed', index_line, 'sentences', flush=True)
-<<<<<<< HEAD
     return text_token, text_lemma, text_pos, text_dep, text_tag
-=======
-            # break
-        # break
-    return text_lemma, text_pos, text_dep, text_tag
->>>>>>> cc8445f935ad92e956830970fa58ed676a0e08f1
 
 
 def main():
@@ -111,13 +94,9 @@ def main():
         print('Loaded', os.path.join(PATH, dataset + '.' + LANG), flush=True)
         with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
             text = file.read()
-<<<<<<< HEAD
         text_token, text_lemma, text_pos, text_dep, text_tag = efficient_tag_text(text)  # tag_text(text)
         with open(os.path.join(PATH, dataset + '.' + LANG + '_tokens'), 'w') as file:
             file.write(text_token)
-=======
-        text_lemma, text_pos, text_dep, text_tag = efficient_tag_text(text)
->>>>>>> cc8445f935ad92e956830970fa58ed676a0e08f1
         with open(os.path.join(PATH, dataset + '.' + LANG + '_lemmas'), 'w') as file:
             file.write(text_lemma)
         with open(os.path.join(PATH, dataset + '.' + LANG + '_pos'), 'w') as file:
