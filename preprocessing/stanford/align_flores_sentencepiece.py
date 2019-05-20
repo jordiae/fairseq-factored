@@ -59,12 +59,12 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                 subword_tags += 'E' + ' '
             current_word = ''
         try:
-            repeated_tokens[-1] = '\n'
-            repeated_lemmas[-1] = '\n'
-            repeated_pos[-1] = '\n'
-            repeated_deps[-1] = '\n'
-            repeated_tags[-1] = '\n'
-            subword_tags[-1] = '\n'
+            repeated_tokens = repeated_tokens[:-1] + '\n'
+            repeated_lemmas = repeated_lemmas[:-1] + '\n'
+            repeated_pos = repeated_pos[:-1] + '\n'
+            repeated_deps = repeated_deps[:-1] + '\n'
+            repeated_tags = repeated_tags[:-1] + '\n'
+            subword_tags = subword_tags[:-1] + '\n'
         except:
             repeated_tokens += '\n'
             repeated_lemmas += '\n'
