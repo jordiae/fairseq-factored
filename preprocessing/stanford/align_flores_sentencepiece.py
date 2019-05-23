@@ -1,4 +1,5 @@
 import os
+import unicodedata
 
 PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data/wiki_ne_en_bpe5000'
 LANG = 'en'
@@ -13,14 +14,19 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
     repeated_tags = ''
     subword_tags = ''
     n_lines = len(text_bpe.splitlines())
+    i = 0
     for line_bpe, line_token, line_lemma, line_pos, line_dep, line_tag in zip(text_bpe.splitlines(), text_token.splitlines(), text_lemma.splitlines(), text_pos.splitlines(), text_dep.splitlines(), text_tag.splitlines()):
         index_bpe = 0
+        i += 1
+        if i < 80000:#< 61222:
+            continue
         for index, token in enumerate(line_token.split()):
-            token = token.replace(chr(8203),'')
+            token = token.replace(chr(8203),'').replace(chr(8206),'').replace('…','...').replace('º','o').replace('™','TM').replace('( ゜o゜ )','( ▁ ゚ o ▁ ゚ )')
+            token = unicodedata.normalize('NFKC', token)
             current_word = ''
             counter = 0
             currently_in_space = False
-            while not current_word == token:
+            while not current_word == token: # and not (token == '…' and current_word == '...') and not (token == 'º' and current_word == 'o') and not(token == '….' and current_word == '....'):
                 if index_bpe >= len(line_bpe):
                     print('current_word', current_word)
                     print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
@@ -34,6 +40,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     current_word += line_bpe[index_bpe]
                     index_bpe += 1
                     currently_in_space = False
+                #current_word = unicodedata.normalize('NFKC', current_word)
                 '''
                 if 'Anti-traditionalism' in line_token:
                     if 'and' in token:
