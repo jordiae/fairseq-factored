@@ -14,4 +14,4 @@ PYTHON="python"
 source ~/.bashrc
 conda activate env
 
-stdbuf -i0 -e0 -o0 $PYTHON FLORES_SYNSET_TAGGER_DIR/assign_align_sentencepiece_synsets.py
+stdbuf -i0 -e0 -o0 $PYTHON $FLORES_SYNSET_TAGGER_DIR/assign_align_sentencepiece_synsets.py
