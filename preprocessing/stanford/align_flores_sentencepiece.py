@@ -13,7 +13,7 @@ LANG = 'en'
 
 def normalize_token(token):
     pieces = s.EncodeAsPieces(token)
-    return ''.join(pieces).replace('_', ' ')
+    return ''.join(pieces).replace('\u2581', '')
 
 
 def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag):
@@ -40,6 +40,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
             currently_in_space = False
             while not current_word == token: # and not (token == '…' and current_word == '...') and not (token == 'º' and current_word == 'o') and not(token == '….' and current_word == '....'):
                 if index_bpe >= len(line_bpe):
+                    print(token)
                     print('current_word', current_word)
                     print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
                     exit()

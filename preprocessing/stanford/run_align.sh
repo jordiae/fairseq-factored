@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-#SBATCH -p veu-fast # Partition to submit to
+#SBATCH -p veu # Partition to submit to
 #SBATCH --mem=10G # Memory
 #SBATCH --ignore-pbs
 #SBATCH --output=/home/usuaris/veu/jordi.armengol/tfg/new/logs/flores/en-ne/align_tags1.log
