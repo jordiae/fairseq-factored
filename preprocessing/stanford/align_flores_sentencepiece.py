@@ -1,8 +1,19 @@
 import os
 import unicodedata
 
+import sentencepiece as spm
+
+FLORES_DATA_PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores'
+BPE_MODEL_PATH = os.path.join(FLORES_DATA_PATH, 'data-bin', 'wiki_ne_en_bpe5000', 'sentencepiece.bpe.model')
+s = spm.SentencePieceProcessor()
+s.Load(BPE_MODEL_PATH)
+
 PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data/wiki_ne_en_bpe5000'
 LANG = 'en'
+
+def normalize_token(token):
+    pieces = s.EncodeAsPieces(token)
+    return ''.join(pieces).replace('_', ' ')
 
 
 def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag):
@@ -18,11 +29,12 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
     for line_bpe, line_token, line_lemma, line_pos, line_dep, line_tag in zip(text_bpe.splitlines(), text_token.splitlines(), text_lemma.splitlines(), text_pos.splitlines(), text_dep.splitlines(), text_tag.splitlines()):
         index_bpe = 0
         i += 1
-        if i < 80000:#< 61222:
-            continue
+        #if i < 80000:#< 61222:
+        #    continue
         for index, token in enumerate(line_token.split()):
-            token = token.replace(chr(8203),'').replace(chr(8206),'').replace('…','...').replace('º','o').replace('™','TM').replace('( ゜o゜ )','( ▁ ゚ o ▁ ゚ )')
-            token = unicodedata.normalize('NFKC', token)
+            #token = token.replace(chr(8203),'').replace(chr(8206),'').replace('…','...').replace('º','o').replace('™','TM').replace('( ゜o゜ )','( ▁ ゚ o ▁ ゚ )')
+            #token = unicodedata.normalize('NFKC', token)
+            token = normalize_token(token)
             current_word = ''
             counter = 0
             currently_in_space = False
