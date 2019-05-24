@@ -141,8 +141,11 @@ def main():
             text_tag = file.read()
         #repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags = align_bpe2(
         #    text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag)
-        x = align_bpe(text_bpe, text_lemma)
-        exit()
+        repeated_tokens = align_bpe(text_bpe, text_token)
+        repeated_lemmas = align_bpe(text_bpe, text_lemma)
+        repeated_pos = align_bpe(text_bpe, text_pos)
+        repeated_deps = align_bpe(text_bpe, text_dep)
+        repeated_tags = align_bpe(text_bpe, text_tag)
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_tokens'), 'w') as file:
             file.write(repeated_tokens)
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_lemmas'), 'w') as file:
