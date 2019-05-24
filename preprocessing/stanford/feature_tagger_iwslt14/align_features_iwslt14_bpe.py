@@ -22,9 +22,10 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
             currently_in_space = False
             while not current_word == token:
                 if index_bpe >= len(line_bpe):
-                    print(token)
+                    print('target token', token)
                     print('current_word', current_word)
-                    print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
+                    print('out of bounds: line_token', line_token, index_bpe, len(line_bpe)-1)
+                    print('line_bpe', line_bpe)
                     exit()
                 if (line_bpe[index_bpe] == '@' and line_bpe[index_bpe+1] == '@') or line_bpe[index_bpe] == ' ':
                     if line_bpe[index_bpe + 1] == '@':
