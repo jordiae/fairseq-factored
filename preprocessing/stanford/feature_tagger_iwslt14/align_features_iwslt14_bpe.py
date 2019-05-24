@@ -4,8 +4,8 @@ import itertools
 PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14.tokenized.de-en/tmp'
 LANG = 'de'
 
-
-def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag):
+'''
+def align_bpe2(text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag):
     repeated_tokens = ''
     repeated_lemmas = ''
     repeated_pos = ''
@@ -84,8 +84,8 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
             repeated_tags += '\n'
             subword_tags += '\n'
     return repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags
-
 '''
+
 def align_bpe(text_bpe, tags):
     token_index = 0
     tag_index = 0
@@ -123,7 +123,7 @@ def align_bpe(text_bpe, tags):
             token_index += 1
             tag_index += 1
     return aligned_tags
-'''
+
 
 def main():
     for dataset in ['train', 'valid', 'test']:
@@ -139,8 +139,10 @@ def main():
             text_dep = file.read()
         with open(os.path.join(PATH, dataset + '.' + LANG + '_tags'), 'r') as file:
             text_tag = file.read()
-        repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags = align_sentencepiece(
-            text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag)
+        #repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags = align_bpe2(
+        #    text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag)
+        x = align_bpe(text_bpe, text_lemma)
+        exit()
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_tokens'), 'w') as file:
             file.write(repeated_tokens)
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_lemmas'), 'w') as file:
