@@ -27,7 +27,10 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
                     exit()
                 if (line_bpe[index_bpe] == '@' and line_bpe[index_bpe+1] == '@') or line_bpe[index_bpe] == ' ':
-                    index_bpe += 1
+                    if line_bpe[index_bpe + 1] == '@':
+                        index_bpe += 2
+                    else:
+                        index_bpe += 1
                     if not currently_in_space:
                         counter += 1
                     currently_in_space = True
