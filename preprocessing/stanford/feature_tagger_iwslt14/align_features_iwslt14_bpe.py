@@ -1,7 +1,7 @@
 import os
 import itertools
 
-PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data/iwslt14.tokenized.de-en/tmp'
+PATH = '/home/usuaris/veu/jordi.armengol/tfg/new/data/iwslt14.tokenized.de-en/tmp'
 LANG = 'de'
 
 
