@@ -48,10 +48,14 @@ def normalize_token(token):
 
 def align_sentencepiece(text_bpe, text_token, text_synset):
     i = 0
+    print(len(text_bpe.splitlines()), len(text_token.splitlines()), len(text_synset.splitlines()))
     repeated_synsets = ''
     for line_bpe, line_token, line_synset in zip(text_bpe.splitlines(), text_token.splitlines(), text_synset.splitlines()):
         index_bpe = 0
         i += 1
+        # print(len(line_bpe.split()),len(line_token.split()), len(line_synset.split()))
+        if i - 1 % 1000:
+            print("Aligned", i, "of", len(text_bpe.splitlines()), flush=True)
         for index, token in enumerate(line_token.split()):
             token = normalize_token(token)
             current_word = ''
@@ -101,6 +105,7 @@ def assign(synsets, original_text):
         for i in range(start_synset, end_synset):
             chars_text[i].add((synset, start_synset, end_synset))
     for index in range(0, len(original_text)):
+        if index+1 % 50000 == 0: print('char',index+1,'of',len(original_text),flush=True)
         if len(chars_text[index]) == 0:
             chars_text[index] = None
         elif len(chars_text[index]) == 1:
@@ -116,38 +121,23 @@ def assign(synsets, original_text):
     return chars_text
 
 
-def assign_pos_if_unknown_synset(chars_assigned_synsets, text_token, text_pos):
-    pos = text_pos.split()
-    indices_split = [(m.start(), m.end()) for m in re.finditer(r'\S+', text_token)]
-    pos_char_index_dict = {}
-    chars_pos = [None] * len(chars_assigned_synsets)
-    for index, p in enumerate(pos):
-        pos_char_index_dict[indices_split[index][0]] = p
-    for pos_start, pos_end in indices_split:
-        for i in range(pos_start, pos_end):
-            chars_pos[i] = (pos_char_index_dict[pos_start])
-    for index, synset in enumerate(chars_assigned_synsets):
-        if synset is None:
-            chars_assigned_synsets[index] = chars_pos[index]
-    return chars_assigned_synsets
 
-
-def chars_to_tokens(chars_assigned_synsets, text_token):
+def chars_to_tokens3(chars_assigned_synsets, text_token, text_pos):
     tokenized_synsets = ''
-    for token_line in text_token.splitlines:
-        for (token, (start_token, end_token)) in zip(token_line.split(), [(m.start(), m.end()) for m in re.finditer(r'\S+', token_line)]):
-            tokenized_synsets += chars_assigned_synsets[start_token]
+    for token_line, pos_line in zip(text_token.splitlines(), text_pos.splitlines()):
+        for (index, (token, (start_token, end_token))) in enumerate(zip(token_line.split(), [(m.start(), m.end()) for m in re.finditer(r'\S+', token_line)])):
+            if chars_assigned_synsets[start_token] is None:
+                tokenized_synsets += pos_line[index] # 'NONE'
+            else:
+                tokenized_synsets += chars_assigned_synsets[start_token]
             tokenized_synsets += ' '
-        tokenized_synsets = tokenized_synsets[-1] + '\n'
+        tokenized_synsets = tokenized_synsets[:-1] + '\n'
+        # print('Added 1 line...')
     return tokenized_synsets
 
-
-def align_chars_sentencepiece(text_bpe, chars_assigned_synsets):
-    return ''
-
-
 def main():
-    for dataset in ['train', 'valid', 'test']:
+    for dataset in ['valid']:#['train', 'valid', 'test']:
+        print('Loading', dataset, flush=True)
         with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
             text = file.read()
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG), 'r') as file:
@@ -168,13 +158,22 @@ def main():
         '''
         with open(os.path.join(PATH, dataset + '.' + LANG + '_synsets'), 'r') as file:
             read_synsets = file.read()
+        print('Getting chunks',flush=True)
         text_chunks = get_chunks(text)
+        print('Parsing chunks',flush=True)
         parsed_chunks = literal_eval(read_synsets)
+        print('Aligning indices',flush=True)
         index_aligned_chunks = align_indices(text_chunks, parsed_chunks)
+        print('Assigning synsets',flush=True)
         chars_assigned_synsets = assign(synsets=flatten(index_aligned_chunks), original_text=text)
-        chars_assigned_synsets = assign_pos_if_unknown_synset(chars_assigned_synsets, text_token, text_pos)
-        tokenized_synsets = chars_to_tokens(chars_assigned_synsets, text_token)
-        repeated_synsets = align_chars_sentencepiece(text_bpe, text_token, tokenized_synsets)
+        #print('Assigning POS if unknown',flush=True)
+        #chars_assigned_synsets = assign_pos_if_unknown_synset(chars_assigned_synsets, text_token, text_pos)
+        print('Tokenizing chars and assigning POS if unknown synset', flush=True)
+        tokenized_synsets = chars_to_tokens3(chars_assigned_synsets, text_token, text_pos)
+        #print('Assigning POS if unknown',flush=True)
+        print(len(tokenized_synsets.splitlines()))
+        print('Aligning sentencepiece', flush=True)
+        repeated_synsets = align_sentencepiece(text_bpe, text_token, tokenized_synsets)
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_synsets'), 'w') as file:
             file.write(repeated_synsets)
 
