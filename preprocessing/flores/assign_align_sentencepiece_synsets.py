@@ -54,7 +54,7 @@ def align_sentencepiece(text_bpe, text_token, text_synset):
         index_bpe = 0
         i += 1
         # print(len(line_bpe.split()),len(line_token.split()), len(line_synset.split()))
-        if i - 1 % 1000:
+        if i - 1 % 1000 == 0:
             print("Aligned", i, "of", len(text_bpe.splitlines()), flush=True)
         for index, token in enumerate(line_token.split()):
             token = normalize_token(token)
