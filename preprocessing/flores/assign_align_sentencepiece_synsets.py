@@ -136,7 +136,7 @@ def chars_to_tokens3(chars_assigned_synsets, text_token, text_pos):
     return tokenized_synsets
 
 def main():
-    for dataset in ['valid']:#['train', 'valid', 'test']:
+    for dataset in ['train', 'valid', 'test']:
         print('Loading', dataset, flush=True)
         with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
             text = file.read()
