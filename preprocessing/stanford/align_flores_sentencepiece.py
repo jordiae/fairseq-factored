@@ -92,6 +92,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                 repeated_tags += line_tag[index] + ' '
                 subword_tags += 'E' + ' '
             current_word = ''
+        '''
         try:
             repeated_tokens = repeated_tokens[:-1] + '\n'
             repeated_lemmas = repeated_lemmas[:-1] + '\n'
@@ -106,6 +107,13 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
             repeated_deps += '\n'
             repeated_tags += '\n'
             subword_tags += '\n'
+        '''
+        repeated_tokens += '\n'
+        repeated_lemmas += '\n'
+        repeated_pos += '\n'
+        repeated_deps += '\n'
+        repeated_tags += '\n'
+        subword_tags += '\n'
     return repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags
 
 

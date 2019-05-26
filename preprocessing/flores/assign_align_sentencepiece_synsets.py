@@ -86,10 +86,13 @@ def align_sentencepiece(text_bpe, text_token, text_synset):
                     counter -= 1
                     repeated_synsets += line_synset[index] + ' '
             current_word = ''
+        '''
         try:
             repeated_synsets = repeated_synsets[:-1] + '\n'
         except:
             repeated_synsets += '\n'
+        '''
+        repeated_synsets += '\n'
     return repeated_synsets
 
 
@@ -130,8 +133,12 @@ def chars_to_tokens3(chars_assigned_synsets, text_token, text_pos):
                 tokenized_synsets += pos_line[index] # 'NONE'
             else:
                 tokenized_synsets += chars_assigned_synsets[start_token]
-            tokenized_synsets += ' '
-        tokenized_synsets = tokenized_synsets[:-1] + '\n'
+            #tokenized_synsets += ' '
+            if index == len(token_line.split()):
+                tokenized_synsets += '\n'
+            else:
+                tokenized_synsets += ' '
+        #tokenized_synsets = tokenized_synsets[:-1] + '\n'
         # print('Added 1 line...')
     return tokenized_synsets
 
