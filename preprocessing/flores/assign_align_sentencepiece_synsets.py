@@ -108,7 +108,7 @@ def assign(synsets, original_text):
         for i in range(start_synset, end_synset):
             chars_text[i].add((synset, start_synset, end_synset))
     for index in range(0, len(original_text)):
-        if index+1 % 50000 == 0: print('char',index+1,'of',len(original_text),flush=True)
+        if index % 100 == 0: print('char',index+1,'of',len(original_text),flush=True)
         if len(chars_text[index]) == 0:
             chars_text[index] = None
         elif len(chars_text[index]) == 1:
