@@ -9,7 +9,7 @@ def format_opennmt(text_bpe, text_lemma, text_pos, text_dep, text_tag, text_subw
     for (index, (line_bpe, line_lemma, line_pos, line_dep, line_tag, line_subword)) in enumerate(zip(text_bpe.splitlines(), text_lemma.splitlines(), text_pos.splitlines(), text_dep.splitlines(), text_tag.splitlines(), text_subword.splitlines())):
         for (index_token, (bpe, lemma, pos, dep, tag, subword)) in enumerate(zip(line_bpe.split(), line_lemma.split(), line_pos.split(), line_dep.split(), line_tag.split(), line_subword.split())):
             res += bpe + sep + lemma + sep + pos + sep + dep + sep + tag + sep + subword
-            if index_token == len(line_bpe) - 1:
+            if index_token == len(line_bpe.split()) - 1:
                 res += '\n'
             else:
                 res += ' '
