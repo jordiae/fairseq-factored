@@ -33,7 +33,7 @@ def main():
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG + '_tags'), 'r') as file:
             text_tag = file.read()
         res = format_opennmt(text_bpe, text_lemma, text_pos, text_dep, text_tag)
-        with open(os.path.join(PATH, 'opennmt.' + dataset + '.bpe.' + LANG + '.txt')) as file:
+        with open(os.path.join(PATH, 'opennmt.' + dataset + '.bpe.' + LANG + '.txt'), 'w') as file:
             file.write(res)
 
 
