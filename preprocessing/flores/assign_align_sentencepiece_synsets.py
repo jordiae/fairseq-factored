@@ -107,20 +107,27 @@ def assign(synsets, original_text):
         end_synset += 1
         for i in range(start_synset, end_synset):
             chars_text[i].add((synset, start_synset, end_synset))
+    cache = {}
     for index in range(0, len(original_text)):
         if index % 100 == 0: print('char',index+1,'of',len(original_text),flush=True)
-        if len(chars_text[index]) == 0:
-            chars_text[index] = None
-        elif len(chars_text[index]) == 1:
-            chars_text = list(chars_text[index])[0]
+        if chars_text[index] in cache:
+            chars_text[index] = cache[chars_text[index]]
         else:
-            max_len = 0
-            selected_synset = None
-            for synset, start_synset, end_synset in chars_text[index]:
-                if end_synset-start_synset > max_len:
-                    max_len = end_synset-start_synset
-                    selected_synset = synset
-            chars_text[index] = selected_synset
+            if len(chars_text[index]) == 0:
+                chars_text[index] = None
+                selected_synset = None
+            elif len(chars_text[index]) == 1:
+                chars_text = list(chars_text[index])[0]
+                selected_synset = list(chars_text[index])[0]
+            else:
+                max_len = 0
+                selected_synset = None
+                for synset, start_synset, end_synset in chars_text[index]:
+                    if end_synset-start_synset > max_len:
+                        max_len = end_synset-start_synset
+                        selected_synset = synset
+                chars_text[index] = selected_synset
+            cache[chars_text[index]] = selected_synset
     return chars_text
 
 
