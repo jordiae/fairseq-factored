@@ -164,7 +164,7 @@ class FactoredTransformerOneEncoderNewModel(FairseqFactoredOneEncoderModel):
         decoder_embed_tokens = build_embedding(
             tgt_dict, args.decoder_embed_dim, args.decoder_embed_path
         )
-        encoder = FactoredTransformerOneEncoderEncoder(args, dicts, encoder_embed_tokens, set(map(task.sort_lang_pair, task.args.lang_pairs)))#args.lang_pairs)#sorted(srcs))
+        encoder = FactoredTransformerOneEncoderEncoder(args, dicts, encoder_embed_tokens, list(map(task.sort_lang_pair, task.args.lang_pairs)))#args.lang_pairs)#sorted(srcs))
         decoder = TransformerDecoder(args, tgt_dict, decoder_embed_tokens)
         return FactoredTransformerOneEncoderNewModel(encoder, decoder)
 
