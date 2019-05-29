@@ -207,6 +207,7 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
             learned=args.encoder_learned_pos,
         ) if not args.no_token_positional_embeddings else None
             self.add_module('embed_positions_' + src, embed_positions_dict[src])
+            if torch.cuda.is_available(): embed_positions_dict[src].cuda()
 
         self.embed_positions = embed_positions_dict
 
