@@ -308,7 +308,17 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
         """Maximum input length supported by the encoder."""
         if self.embed_positions is None:
             return self.max_source_positions
+        # all positional embeddings have the same max_positions()
+        for key, value in self.embed_positions:
+            if value is None:
+                return self.max_source_positions
+        for key, value in self.embed_positions:
+            return min(self.max_source_positions, self.embed_positions.max_positions())
+        '''
+        if self.embed_positions is None:
+            return self.max_source_positions
         return min(self.max_source_positions, self.embed_positions.max_positions())
+        '''
 
     def upgrade_state_dict_named(self, state_dict, name):
         """Upgrade a (possibly old) state dict for new versions of fairseq."""
