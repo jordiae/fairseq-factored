@@ -313,7 +313,7 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
             if value is None:
                 return self.max_source_positions
         for key, value in self.embed_positions.items():
-            return min(self.max_source_positions, self.embed_positions.max_positions())
+            return min(self.max_source_positions, value.max_positions())
         '''
         if self.embed_positions is None:
             return self.max_source_positions
