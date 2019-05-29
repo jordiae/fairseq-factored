@@ -933,7 +933,7 @@ def test4_factored_one_encoder_transformer_iwslt_de_en(args):
     factored_one_encoder_base_architecture(args)
 
 
-@register_model_architecture('factored_transformer_one_encoder_new', 'factored_transformer_one_encoder_new_new_sennrich')
+@register_model_architecture('factored_transformer_one_encoder_new', 'factored_transformer_one_encoder_new_sennrich')
 def factored_one_encoder_iwslt_de_en(args):
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1024)
