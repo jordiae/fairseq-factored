@@ -309,10 +309,10 @@ class FactoredTransformerOneEncoderEncoder(FairseqEncoder):
         if self.embed_positions is None:
             return self.max_source_positions
         # all positional embeddings have the same max_positions()
-        for key, value in self.embed_positions:
+        for key, value in self.embed_positions.items():
             if value is None:
                 return self.max_source_positions
-        for key, value in self.embed_positions:
+        for key, value in self.embed_positions.items():
             return min(self.max_source_positions, self.embed_positions.max_positions())
         '''
         if self.embed_positions is None:
