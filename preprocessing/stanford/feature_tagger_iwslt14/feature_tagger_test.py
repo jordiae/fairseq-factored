@@ -74,7 +74,7 @@ def tag_doc(doc):
         poss.append(token.pos_)
         deps.append(token.dep_)
         tags.append(token.tag_)
-        if is_null(token.text) or is_null(token.lemma_) or is_null(token.pos_) or is_null(token.dep_) or is_null(token.dep) or is_null(token.tag):
+        if is_null(token.text) or is_null(token.lemma_) or is_null(token.pos_) or is_null(token.dep_) or is_null(token.tag):
             raise Exception('NULL TAG!')
     return tokens, lemmas, poss, deps, tags
 
