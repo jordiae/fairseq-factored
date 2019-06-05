@@ -47,7 +47,7 @@ def tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
-            if 'Ã¤' in text_token:
+            if 'Ã¤' in token:
                 raise Exception('Bad umlaut!')
         if index_line % 100 == 0:
             print('Processed', index_line, 'sentences', flush=True)
