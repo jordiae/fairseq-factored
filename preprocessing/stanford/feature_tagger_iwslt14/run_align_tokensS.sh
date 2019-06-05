@@ -14,4 +14,4 @@ PYTHON="python"
 source ~/.bashrc
 conda activate env
 
-stdbuf -i0 -e0 -o0 $PYTHON $FEATURE_TAGGER_DIR/align_features_iwslt14_bpe_tokens.py
+stdbuf -i0 -e0 -o0 $PYTHON $FEATURE_TAGGER_DIR/align_features_iwslt14_bpe_tokensS.py
