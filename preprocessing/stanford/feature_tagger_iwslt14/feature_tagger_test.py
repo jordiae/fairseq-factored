@@ -76,6 +76,14 @@ def tag_doc(doc):
         tags.append(token.tag_)
         if is_null(token.text) or is_null(token.lemma_) or is_null(token.pos_) or is_null(token.dep_) or is_null(token.tag):
             raise Exception('NULL TAG!')
+    ltokens = len(tokens)
+    llemmas = len(lemmas)
+    lposs = len(poss)
+    ldeps = len(deps)
+    ltags = len(tags)
+    lengths = [ltokens, llemmas, lposs, ldeps, ltags]
+    if not all(lengths[0] == item for item in lengths):
+        raise Exception('DIFFERENT LENGTH!')
     return tokens, lemmas, poss, deps, tags
 
 
@@ -99,6 +107,9 @@ def efficient_tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
+            if is_null(token) or is_null(lemma) or is_null(pos) or is_null(dep) or is_null(
+                    tag):
+                raise Exception('EMPTY STRING!')
         if index_line % 1000 == 0:
             print('Processed', index_line, 'sentences', flush=True)
             #del snlp
