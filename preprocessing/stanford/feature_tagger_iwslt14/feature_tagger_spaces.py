@@ -47,6 +47,8 @@ def tag_text(text):
             text_pos += pos + sep
             text_dep += dep + sep
             text_tag += tag + sep
+            if 'Ã¤' in text_token:
+                raise Exception('Bad umlaut!')
         if index_line % 100 == 0:
             print('Processed', index_line, 'sentences', flush=True)
             #global snlp
@@ -106,7 +108,7 @@ def efficient_tag_text(text):
 def main():
     for dataset in ['train', 'valid', 'test']:
         print('Loaded', os.path.join(PATH, dataset + '.' + LANG), flush=True)
-        with open(os.path.join(PATH, dataset + '.' + LANG), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + LANG), 'r', encoding="utf8") as file:
             text = file.read()
         print("Running tagger...", flush=True)
         text_token, text_lemma, text_pos, text_dep, text_tag = tag_text(text)
