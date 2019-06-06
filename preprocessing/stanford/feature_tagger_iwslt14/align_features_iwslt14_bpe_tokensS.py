@@ -153,10 +153,6 @@ def align_bpe(text_bpe, tags):
 
 
 def main():
-    text_bpe = 'und wenn sie sich einige sur@@ fer@@ -@@ seiten anschauen , können sie in der tat nicht nur sehen , wie die wellen sind oder wie das we@@ tter ist , sondern auf man@@ chen seiten für sur@@ fer sehen sie ein kleines , blin@@ ken@@ des al@@ arm@@ -@@ häu@@ f@@ chen'
-    tags = 'und wenn sie sich einige surfer-seiten anschauen , können sie in der tat nicht nur sehen , wie die wellen sind oder wie das wetter ist , sondern auf manchen seiten für surfer sehen sie ein kleines , blinkendes alarm-häufchen'
-    align_bpe(text_bpe, tags)
-    return
     for dataset in ['train', 'valid', 'test']:
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG), 'r') as file:
             text_bpe_tokens = file.read()
