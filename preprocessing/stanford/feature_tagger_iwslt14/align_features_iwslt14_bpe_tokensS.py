@@ -133,18 +133,25 @@ def align_bpe(text_bpe, tags):
         bpe_index = 0
         tag_index = 0
         while bpe_index < len(bpe_tokens):
-            if '@@' in bpe_tokens[bpe_index]:
-                while '@@' in bpe_tokens[bpe_index]:
-                    res += tag_tokens[tag_index] + ' '
-                    bpe_index += 1
-                    if '@@' not in bpe_tokens[bpe_index]:
+            try:
+                if '@@' in bpe_tokens[bpe_index]:
+                    while '@@' in bpe_tokens[bpe_index]:
                         res += tag_tokens[tag_index] + ' '
                         bpe_index += 1
-                        tag_index += 1
-            else:
-                res += tag_tokens[tag_index] + ' '
-                bpe_index += 1
-                tag_index += 1
+                        if '@@' not in bpe_tokens[bpe_index]:
+                            res += tag_tokens[tag_index] + ' '
+                            bpe_index += 1
+                            tag_index += 1
+                else:
+                    res += tag_tokens[tag_index] + ' '
+                    bpe_index += 1
+                    tag_index += 1
+            except:
+                print(index_line)
+                print(bpe_tokens)
+                print(tag_tokens)
+                print(bpe_index, tag_index)
+                exit(1)
         if tag_index != len(tag_tokens):
             raise Exception('Ignored tags in line ' + str(index_line))
         res += '\n'
