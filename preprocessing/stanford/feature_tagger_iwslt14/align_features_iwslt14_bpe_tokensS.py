@@ -148,7 +148,7 @@ def align_bpe(text_bpe, tags):
         if tag_index != len(tag_tokens):
             raise Exception('Ignored tags in line ' + str(index_line))
         res += '\n'
-        return res
+    return res
 
 
 def main():
