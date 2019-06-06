@@ -84,7 +84,7 @@ def align_bpe2(text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag):
             repeated_tags += '\n'
             subword_tags += '\n'
     return repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags
-'''
+
 
 def align_bpe(text_bpe, tags):
     token_index = 0
@@ -123,6 +123,32 @@ def align_bpe(text_bpe, tags):
             token_index += 1
             tag_index += 1
     return aligned_tags
+'''
+
+def align_bpe(text_bpe, tags):
+    res = ''
+    for (index_line, (line_bpe, line_tags)) in enumerate(zip(text_bpe.splitlines(), tags.splitlines())):
+        bpe_tokens = line_bpe.split()
+        tag_tokens = line_tags.split()
+        bpe_index = 0
+        tag_index = 0
+        while bpe_index < len(bpe_tokens):
+            if '@@' in bpe_tokens[bpe_index]:
+                while '@@' in bpe_tokens[bpe_index]:
+                    res += tag_tokens[tag_index] + ' '
+                    bpe_index += 1
+                    if '@@' not in bpe_tokens[bpe_index]:
+                        res += tag_tokens[tag_index] + ' '
+                        bpe_index += 1
+                        tag_index += 1
+            else:
+                res += tag_tokens[tag_index] + ' '
+                bpe_index += 1
+                tag_index += 1
+        if tag_index != len(tag_tokens):
+            raise Exception('Ignored tags in line ' + str(index_line))
+        res += '\n'
+        return res
 
 
 def main():
