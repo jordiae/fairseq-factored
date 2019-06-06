@@ -133,25 +133,19 @@ def align_bpe(text_bpe, tags):
         bpe_index = 0
         tag_index = 0
         while bpe_index < len(bpe_tokens):
-            try:
-                if '@@' in bpe_tokens[bpe_index]:
-                    while '@@' in bpe_tokens[bpe_index]:
-                        res += tag_tokens[tag_index] + ' '
-                        bpe_index += 1
-                        if '@@' not in bpe_tokens[bpe_index]:
-                            res += tag_tokens[tag_index] + ' '
-                            bpe_index += 1
-                            tag_index += 1
-                else:
+            if '@@' in bpe_tokens[bpe_index]:
+                while '@@' in bpe_tokens[bpe_index]:
                     res += tag_tokens[tag_index] + ' '
                     bpe_index += 1
-                    tag_index += 1
-            except:
-                print(index_line)
-                print(bpe_tokens)
-                print(tag_tokens)
-                print(bpe_index, tag_index)
-                exit(1)
+                    if '@@' not in bpe_tokens[bpe_index]:
+                        res += tag_tokens[tag_index] + ' '
+                        bpe_index += 1
+                        tag_index += 1
+                        break
+            else:
+                res += tag_tokens[tag_index] + ' '
+                bpe_index += 1
+                tag_index += 1
         if tag_index != len(tag_tokens):
             raise Exception('Ignored tags in line ' + str(index_line))
         res += '\n'
@@ -159,6 +153,10 @@ def align_bpe(text_bpe, tags):
 
 
 def main():
+    text_bpe = 'und wenn sie sich einige sur@@ fer@@ -@@ seiten anschauen , können sie in der tat nicht nur sehen , wie die wellen sind oder wie das we@@ tter ist , sondern auf man@@ chen seiten für sur@@ fer sehen sie ein kleines , blin@@ ken@@ des al@@ arm@@ -@@ häu@@ f@@ chen'
+    tags = 'und wenn sie sich einige surfer-seiten anschauen , können sie in der tat nicht nur sehen , wie die wellen sind oder wie das wetter ist , sondern auf manchen seiten für surfer sehen sie ein kleines , blinkendes alarm-häufchen'
+    align_bpe(text_bpe, tags)
+    return
     for dataset in ['train', 'valid', 'test']:
         with open(os.path.join(PATH, dataset + '.bpe.' + LANG), 'r') as file:
             text_bpe_tokens = file.read()
