@@ -173,13 +173,13 @@ def main():
         with open(os.path.join(PATH, dataset + '.' + LANG + '_tags'), 'r') as file:
             text_tag = file.read()
         '''
-        with open(os.path.join(PATH, dataset + '.' + 'de' + '_lemmas'), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + 'de' + '_lemmasS'), 'r') as file:
             text_lemma = file.read()
-        with open(os.path.join(PATH, dataset + '.' + 'de' + '_pos'), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + 'de' + '_posS'), 'r') as file:
             text_pos = file.read()
-        with open(os.path.join(PATH, dataset + '.' + 'de' + '_deps'), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + 'de' + '_depsS'), 'r') as file:
             text_dep = file.read()
-        with open(os.path.join(PATH, dataset + '.' + 'de' + '_tags'), 'r') as file:
+        with open(os.path.join(PATH, dataset + '.' + 'de' + '_tagsS'), 'r') as file:
             text_tag = file.read()
         #repeated_tokens, repeated_lemmas, repeated_pos, repeated_deps, repeated_tags, subword_tags = align_bpe2(
         #    text_bpe, text_token, text_lemma, text_pos, text_dep, text_tag)
