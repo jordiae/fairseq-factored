@@ -7,9 +7,8 @@ LANG = 'de_tokensS'
 
 def get_subword_tags(text_bpe):
     res = ''
-    for (index_line, (line_bpe, line_tags)) in enumerate(zip(text_bpe.splitlines(), tags.splitlines())):
+    for (index_line, line_bpe) in enumerate(text_bpe.splitlines()):
         bpe_tokens = line_bpe.split()
-        tag_tokens = line_tags.split()
         bpe_index = 0
         tag_index = 0
         res_line = ''
@@ -32,12 +31,6 @@ def get_subword_tags(text_bpe):
                 res_line += 'O' + ' '
                 bpe_index += 1
                 tag_index += 1
-        if tag_index != len(tag_tokens):
-            print(res_line)
-            print(line_bpe)
-            print(line_tags)
-            print(tag_index, len(tag_tokens))
-            raise Exception('Ignored tags in line ' + str(index_line))
         res += res_line + '\n'
     return res
 
