@@ -198,7 +198,7 @@ def factored_transformer_iwslt_de_en(args):
     base_factored_architecture(args)
 
 
-@register_model_architecture('factored_transformer_sum', 'factored_transformer_sum_iwslt_de_en_lemmas_stanford')
+@register_model_architecture('factored_transformer_sum', 'factored_transformer_sum_iwslt_de_en_lemmas_stanfordS')
 def factored_transformer_iwslt_de_en(args):
     args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)
     args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 1024)
