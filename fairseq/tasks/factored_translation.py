@@ -209,8 +209,8 @@ class FactoredTranslationTask(FairseqTask):
                 for i in range(0, d1):
                     print(src_tokens[i][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))],'->',self.dicts[lang_pair.split('-')[0]].unk())
                     index_to_mask = int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))
-                    src_tokens[i][index_to_mask] = self.dicts[lang_pair.split('-')[0]].unk()
-                if torch.cuda.is_available(): src_tokens.cuda()
+                    src_tokens[i][index_to_mask] = torch.tensor(self.dicts[lang_pair.split('-')[0]].unk())
+                #if torch.cuda.is_available(): src_tokens.cuda()
                 print(self.dicts[lang_pair.split('-')[0]].unk())
                 print(src_tokens.shape)
                 #exit()
