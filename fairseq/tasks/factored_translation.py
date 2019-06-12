@@ -207,7 +207,9 @@ class FactoredTranslationTask(FairseqTask):
                 print(src_tokens.shape)
                 d1, d2 = src_tokens.shape
                 for i in range(0, d1):
-                    src_tokens[d1-1][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))] = self.dicts[lang_pair.split('-')[0]].unk()
+                    src_tokens[i][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))] = self.dicts[lang_pair.split('-')[0]].unk()
+                print(self.dicts[lang_pair.split('-')[0]].unk())
+                exit()
                 #####
                 mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens, 0) #torch.tensor(src_tokens)#.clone().detach()
             else:
