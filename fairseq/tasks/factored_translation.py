@@ -207,6 +207,7 @@ class FactoredTranslationTask(FairseqTask):
                 print(src_tokens.shape)
                 d1, d2 = src_tokens.shape
                 for i in range(0, d1):
+                    print(src_tokens[i][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))],'->',self.dicts[lang_pair.split('-')[0]].unk())
                     src_tokens[i][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))] = self.dicts[lang_pair.split('-')[0]].unk()
                 print(self.dicts[lang_pair.split('-')[0]].unk())
                 print(src_tokens.shape)
