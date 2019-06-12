@@ -203,10 +203,16 @@ class FactoredTranslationTask(FairseqTask):
             if len(mixed_sample) == 0:
                 mixed_sample = sample[lang_pair]
                 src_tokens = mixed_sample['net_input']['src_tokens']
+                ##### MASS
+                d1, d2 = src_tokens.shape
+                for i in range(0, d1):
+                    src_tokens[d1][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))] = self.dicts[lang_pair].unk()
+                #####
                 mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens, 0) #torch.tensor(src_tokens)#.clone().detach()
             else:
                 mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'], 0)))
-
+        #mixed_sample['net_input']['src_tokens'][0]
+        #int(np.round(np.random.uniform(0, l - 1)))
         loss, sample_size, logging_output = criterion(model, mixed_sample)
         #print(sample_size)
         if ignore_grad:
