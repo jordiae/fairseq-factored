@@ -16,9 +16,9 @@ def main():
     with open(PATH, 'r') as fo:
         orig = fo.readlines()
     ref, gen = get_ref_gen(orig)
-    with open(PATH + '.ref') as fr:
+    with open(PATH + '.ref', 'w') as fr:
         fr.write(ref)
-    with open(PATH + '.gen') as fr:
+    with open(PATH + '.gen', 'w') as fr:
         fr.write(gen)
 
 
