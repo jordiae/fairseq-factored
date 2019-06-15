@@ -26,4 +26,4 @@ conda activate env
 #cd /home/usuaris/veu/jordi.armengol/stanfordnlp_resources
 #unzip de_gsd_models.zip
 echo $LD_PRELOAD
-stdbuf -i0 -e0 -o0 $PYTHON $FEATURE_TAGGER_DIR/newtest_feature_tagger_spaces.py
+stdbuf -i0 -e0 -o0 $PYTHON $FEATURE_TAGGER_DIR/newtest_feature_tagger_spaces2.py
