@@ -1,14 +1,24 @@
 PATH = ''
 
 
+def reverse_splitlines(lines):
+    s = ''
+    for l in lines:
+        s += l + '\n'
+    return s
+
+
 def get_ref_gen(orig):
-    ref = ''
-    gen = ''
+    n_sentences = int(orig[-2].split()[2])
+    ref = [None]*n_sentences
+    gen = [None]*n_sentences
     for l in orig:
         if l[0] == 'T':
-            ref += ' '.join(l.split()[2:]) + '\n'
+            ref[int(l.split()[0][2:])] = ' '.join(l.split()[2:])
         elif l[0] == 'H':
-            gen += ' '.join(l.split()[2:]) + '\n'
+            gen[int(l.split()[0][2:])] = ' '.join(l.split()[2:])
+    ref = reverse_splitlines(ref)
+    gen = reverse_splitlines(gen)
     return ref, gen
 
 
