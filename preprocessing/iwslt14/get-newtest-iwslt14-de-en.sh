@@ -65,7 +65,7 @@ for l in $src $tgt; do
 
     cat $tmp/IWSLT16.TED.tst2013.de-en.$l \
         $tmp/IWSLT16.TEDX.tst2013.de-en.$l \
-        $tmp/IWSLT16.TED.tst2014.de-en.de-en.$l \
+        $tmp/IWSLT16.TED.tst2014.de-en.$l \
         $tmp/IWSLT16.TEDX.tst2014.de-en.$l
         > $tmp/test.$l
 done
@@ -73,11 +73,6 @@ done
 
 TRAIN=$tmp/train.en-de
 BPE_CODE=$prep/code
-rm -f $TRAIN
-for l in $src $tgt; do
-    cat $tmp/train.$l >> $TRAIN
-done
 
-mkdir ../../../../data/
 mv orig16 ../../../../data/
 mv iwslt16.tokenized.de-en ../../../../data/
