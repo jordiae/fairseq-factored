@@ -10,8 +10,8 @@ BPEROOT=subword-nmt
 BPE_TOKENS=10000
 
 
-#URL="https://wit3.fbk.eu/archive/2016-01/texts/de/en/de-en.tgz"
-GZ=de-en16.tgz
+URL="https://wit3.fbk.eu/archive/2016-01/texts/de/en/de-en.tgz"
+GZ=de-en13.tgz
 
 if [ ! -d "$SCRIPTS" ]; then
     echo "Please set SCRIPTS variable correctly to point to Moses scripts."
@@ -27,9 +27,9 @@ orig=orig13
 
 mkdir -p $orig $tmp $prep
 
-#echo "Downloading data from ${URL}..."
+echo "Downloading data from ${URL}..."
 cd $orig
-#wget -O $GZ "$URL"
+wget -O $GZ "$URL"
 
 if [ -f $GZ ]; then
     echo "Data successfully downloaded."
