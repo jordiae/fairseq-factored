@@ -203,30 +203,16 @@ class FactoredTranslationTask(FairseqTask):
             if len(mixed_sample) == 0:
                 mixed_sample = sample[lang_pair]
                 src_tokens = mixed_sample['net_input']['src_tokens']
-                ##### MASS
-                print(src_tokens.shape)
-                d1, d2 = src_tokens.shape
-                for i in range(0, d1):
-                    #print(src_tokens[i][int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))],'->',self.dicts[lang_pair.split('-')[0]].unk())
-                    #index_to_mask = int(np.round(np.random.uniform(0, len(src_tokens[i])-1)))
-                    index_to_mask = torch.LongTensor(1).random_(0, len(src_tokens[i]))[0].cuda()
-                    print(src_tokens[i][index_to_mask])
-                    src_tokens[i][index_to_mask] = torch.tensor(3).cuda()#torch.tensor(self.dicts[lang_pair.split('-')[0]].unk().cuda()).cuda()
-                    print(src_tokens[i][index_to_mask])
-                #if torch.cuda.is_available(): src_tokens.cuda()
-
-                #print(self.dicts[lang_pair.split('-')[0]].unk())
-                print(src_tokens.shape)
-                print()
-                #exit()
-                #####
-                mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens, 0) #torch.tensor(src_tokens)#.clone().detach()
+                mixed_sample['net_input']['src_tokens'] = torch.unsqueeze(src_tokens,
+                                                                          0)  # torch.tensor(src_tokens)#.clone().detach()
             else:
-                mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'], torch.unsqueeze(sample[lang_pair]['net_input']['src_tokens'], 0)))
-        #mixed_sample['net_input']['src_tokens'][0]
-        #int(np.round(np.random.uniform(0, l - 1)))
+                mixed_sample['net_input']['src_tokens'] = torch.cat((mixed_sample['net_input']['src_tokens'],
+                                                                     torch.unsqueeze(
+                                                                         sample[lang_pair]['net_input']['src_tokens'],
+                                                                         0)))
+
         loss, sample_size, logging_output = criterion(model, mixed_sample)
-        #print(sample_size)
+        # print(sample_size)
         if ignore_grad:
             loss *= 0
         optimizer.backward(loss)
