@@ -20,7 +20,8 @@ PYTHON="python"
 
 FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-factored"
 
-DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data-bin/wiki_${SRC}_${TGT}_bpe${BPESIZE}"
+#DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data-bin/wiki_${SRC}_${TGT}_bpe${BPESIZE}"
+DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data-bin/wiki_ne_en_bpe5000"
 
 
 # Activate conda environment
