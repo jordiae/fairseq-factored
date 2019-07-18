@@ -30,34 +30,34 @@ SRC_TAG="en_lemmas"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR --workers 4 --tgtdict $DEST_DIR/dict.ne.txt
 
 SRC_TAG="en_synsets"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR  --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
 
 SRC_TAG="en_pos"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR  --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
 
 SRC_TAG="en_deps"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR  --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
 
 SRC_TAG="en_tags"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR  --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
 
 SRC_TAG="en_subword_tags"
 
 stdbuf -i0 -e0 -o0  $PYTHON $FAIRSEQ_DIR/preprocess.py --source-lang SRC_TAG --target-lang $TGT \
     --trainpref $WORKING_DIR/${TRN_PREF}.bpe --validpref $WORKING_DIR/${VAL_PREF}.bpe --testpref $WORKING_DIR/${TES_PREF}.bpe \
-    --destdir $DEST_DIR  --joined-dictionary --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
+    --destdir $DEST_DIR   --workers 4  --tgtdict $DEST_DIR/dict.ne.txt
