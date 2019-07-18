@@ -34,5 +34,5 @@ stdbuf -i0 -e0 -o0 $PYTHON $FAIRSEQ_DIR/train.py $WORKING_DIR \
     --lr 1e-3 --min-lr 1e-9 \
     --max-tokens 4000 \
     --update-freq 4 \
-    --max-epoch 100 --keep-last-epochs 2 --save-dir $CP_DIR \#--save-interval 10
+    --max-epoch 100 --keep-last-epochs 2 --save-dir $CP_DIR \ #--save-interval 10
     --multiple-encoders False
