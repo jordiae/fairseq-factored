@@ -22,6 +22,7 @@ FAIRSEQ_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/src/fairseq-baseline-facto
 
 DEST_DIR="/home/usuaris/veu/jordi.armengol/tfg/new/data/flores/data-bin/wiki_${SRC}_${TGT}_bpe${BPESIZE}"
 
+
 # Activate conda environment
 source ~/.bashrc
 conda activate env
