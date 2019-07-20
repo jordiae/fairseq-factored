@@ -147,23 +147,58 @@ class FactoredTransformerOneEncoderSumModel(FairseqFactoredOneEncoderModel):
                 tgt_dict, args.decoder_embed_dim, args.decoder_embed_path
             )
         '''
-        encoder_embed_tokens = {}
-        #encoder_embed_tokens = None
-        src_dicts = {}
-        srcs = []
-        for lang_pair in set(map(task.sort_lang_pair, task.args.lang_pairs)):
-            src, tgt = lang_pair.split('-')
-            srcs.append(src)
-            src_dict = dicts[src]
-            src_dicts[src] = src_dict
-            encoder_embed_tokens[src] = build_embedding(
-                src_dict, args.encoder_embed_dim_sizes[src], args.encoder_embed_path
+        if args.share_all_embeddings:
+            src_dict, tgt_dict = task.source_dictionary, task.target_dictionary
+            if src_dict != tgt_dict:
+                raise ValueError('--share-all-embeddings requires a joined dictionary')
+            if args.encoder_embed_dim != args.decoder_embed_dim:
+                raise ValueError(
+                    '--share-all-embeddings requires --encoder-embed-dim to match --decoder-embed-dim')
+            if args.decoder_embed_path and (
+                    args.decoder_embed_path != args.encoder_embed_path):
+                raise ValueError('--share-all-embeddings not compatible with --decoder-embed-path')
+            encoder_embed_tokens = build_embedding(
+                src_dict, args.encoder_embed_dim, args.encoder_embed_path
             )
-            if torch.cuda.is_available(): encoder_embed_tokens[src].cuda()
-        tgt_dict = dicts[tgt]
-        decoder_embed_tokens = build_embedding(
-            tgt_dict, args.decoder_embed_dim, args.decoder_embed_path
-        )
+            decoder_embed_tokens = encoder_embed_tokens
+
+
+            encoder_embed_tokens = {}
+            # encoder_embed_tokens = None
+            src_dicts = {}
+            srcs = []
+            for lang_pair in set(map(task.sort_lang_pair, task.args.lang_pairs)):
+                src, tgt = lang_pair.split('-')
+                srcs.append(src)
+                src_dict = dicts[src]
+                src_dicts[src] = src_dict
+                encoder_embed_tokens[src] = build_embedding(
+                    src_dict, args.encoder_embed_dim_sizes[src], args.encoder_embed_path
+                )
+                if src_dict == task.source_dictionary:
+                    decoder_embed_tokens = encoder_embed_tokens[src]
+                if torch.cuda.is_available(): encoder_embed_tokens[src].cuda()
+            tgt_dict = dicts[tgt]
+            args.share_decoder_input_output_embed = True
+
+        else:
+            encoder_embed_tokens = {}
+            #encoder_embed_tokens = None
+            src_dicts = {}
+            srcs = []
+            for lang_pair in set(map(task.sort_lang_pair, task.args.lang_pairs)):
+                src, tgt = lang_pair.split('-')
+                srcs.append(src)
+                src_dict = dicts[src]
+                src_dicts[src] = src_dict
+                encoder_embed_tokens[src] = build_embedding(
+                    src_dict, args.encoder_embed_dim_sizes[src], args.encoder_embed_path
+                )
+                if torch.cuda.is_available(): encoder_embed_tokens[src].cuda()
+            tgt_dict = dicts[tgt]
+            decoder_embed_tokens = build_embedding(
+                tgt_dict, args.decoder_embed_dim, args.decoder_embed_path
+            )
         encoder = FactoredTransformerOneEncoderEncoder(args, dicts, encoder_embed_tokens, args.lang_pairs)#sorted(srcs))
         decoder = TransformerDecoder(args, tgt_dict, decoder_embed_tokens)
         return FactoredTransformerOneEncoderSumModel(encoder, decoder)
