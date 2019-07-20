@@ -74,7 +74,7 @@ class RoundRobinZipDatasets(FairseqDataset):
             return self.datasets[self.eval_key].collater(samples)
 
     def get_dummy_batch(self, max_tokens, max_positions):
-        if self.eval_key is None:
+        if self.eval_key is None or self.eval_key == ['factored']:
             # TODO should max_tokens be used independently for each batch like this?
             return OrderedDict([
                 (key, dataset.get_dummy_batch(max_tokens, max_positions))#[key]))
