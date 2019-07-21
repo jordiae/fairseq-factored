@@ -114,8 +114,8 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
         repeated_deps += '\n'
         repeated_tags += '\n'
         subword_tags += '\n'
-        if len(line_bpe.split()) != len(repeated_lemmas[i-1].split()):
-            print(len(line_bpe.split()), 'vs', len(repeated_lemmas[i-1].split()))
+        if len(line_bpe.split()) != len(repeated_lemmas.splitlines()[i-1].split()):
+            print(len(line_bpe.split()), 'vs', len(repeated_lemmas.splitlines()[i-1].split()))
             print(line_bpe)
             print(repeated_lemmas[i-1])
             print()
