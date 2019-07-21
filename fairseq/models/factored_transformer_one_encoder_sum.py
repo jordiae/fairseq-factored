@@ -857,13 +857,13 @@ def factored_one_encoder_iwslt_de_en(args):
 
 @register_model_architecture('factored_transformer_one_encoder_sum', 'factored_transformer_one_encoder_sum_en_ne_lemmas')
 def factored_one_encoder_iwslt_de_en(args):
-    #args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)
-    #args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 2048)
-    #args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 2)
-    #args.encoder_layers = getattr(args, 'encoder_layers', 5)
+    args.encoder_embed_dim = getattr(args, 'encoder_embed_dim', 512)
+    args.encoder_ffn_embed_dim = getattr(args, 'encoder_ffn_embed_dim', 2048)
+    args.encoder_attention_heads = getattr(args, 'encoder_attention_heads', 2)
+    args.encoder_layers = getattr(args, 'encoder_layers', 5)
     args.encoder_embed_dim_sizes = {'en': 512, 'en_lemmas': 512}
-    #args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 512)
-    #args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 2048)
-    #args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 2)
-    #args.decoder_layers = getattr(args, 'decoder_layers', 5)
+    args.decoder_embed_dim = getattr(args, 'decoder_embed_dim', 512)
+    args.decoder_ffn_embed_dim = getattr(args, 'decoder_ffn_embed_dim', 2048)
+    args.decoder_attention_heads = getattr(args, 'decoder_attention_heads', 2)
+    args.decoder_layers = getattr(args, 'decoder_layers', 5)
     factored_one_encoder_base_architecture(args)
