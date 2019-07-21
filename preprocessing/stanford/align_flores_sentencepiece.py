@@ -63,7 +63,8 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     if not currently_in_space:
                         counter += 1
                     currently_in_space = True
-                elif index+2 < len(line_lemma) and line_lemma[index:index+1] == '"' and line_lemma[index:index+2] == '"':
+                elif index+2 < len(line_token.split()) and line_lemma[index:index+1] == '"' and line_lemma[index:index+2] == '"':
+                    print('SOM-HI')
                     repeated_tokens += token + line_token.split()[index+1] + line_token.split()[index+2] + ' '
                     repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + line_lemma.split()[index+2] + ' '
                     repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + line_pos.split()[index+2] + ' '
