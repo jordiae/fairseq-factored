@@ -45,6 +45,16 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
                     exit()
                 if line_bpe[index_bpe] == '\u2581' or line_bpe[index_bpe] == ' ':
+                    if line_bpe[index_bpe] == '\u2581' and (index_bpe == 0 or line_bpe[index_bpe-1] == ' ') and (index_bpe == len(line_bpe)-1 or line_bpe[index_bpe+1] == ' '):
+                        repeated_tokens += '\u2581' + ' '
+                        repeated_lemmas += '\u2581' + ' '
+                        repeated_pos += '\u2581' + ' '
+                        repeated_deps += '\u2581' + ' '
+                        repeated_tags += '\u2581' + ' '
+                        subword_tags += 'O' + ' '
+                        current_word = ''
+                        index_bpe += 1
+                        continue
                     index_bpe += 1
                     if not currently_in_space:
                         counter += 1
