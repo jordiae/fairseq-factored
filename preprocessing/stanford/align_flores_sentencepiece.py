@@ -64,18 +64,20 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     if not currently_in_space:
                         counter += 1
                     currently_in_space = True
-                elif index+2 < len(line_token.split()) and line_lemma.split()[index+1] == '"' and line_lemma.split()[index+2] == '"':
-                    print('SOM-HI')
-                    repeated_tokens += token + line_token.split()[index+1] + line_token.split()[index+2] + ' '
-                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + line_lemma.split()[index+2] + ' '
-                    repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + line_pos.split()[index+2] + ' '
-                    repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + line_dep.split()[index+2] + ' '
-                    repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + line_tag.split()[index+2] + ' '
-                    subword_tags += 'O' + ' '
-                    current_word = ''
-                    index_bpe += 2
-                    skip = 2
-                    continue
+                    ''' <-
+                    elif index+2 < len(line_token.split()) and line_lemma.split()[index+1] == '"' and line_lemma.split()[index+2] == '"':
+                        print('SOM-HI')
+                        repeated_tokens += token + line_token.split()[index+1] + line_token.split()[index+2] + ' '
+                        repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + line_lemma.split()[index+2] + ' '
+                        repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + line_pos.split()[index+2] + ' '
+                        repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + line_dep.split()[index+2] + ' '
+                        repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + line_tag.split()[index+2] + ' '
+                        subword_tags += 'O' + ' '
+                        current_word = ''
+                        index_bpe += 2
+                        skip = 2
+                        continue
+                    '''
                 else:
                     current_word += line_bpe[index_bpe]
                     index_bpe += 1
@@ -89,6 +91,48 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         #exit()
                     print(index_bpe, token,len(token), len(current_word), current_word)
                 '''
+            if index_bpe < len(text_bpe) and text_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
+                #print('hola')
+                #print(ord(text_bpe[index_bpe]))
+                #print()
+                #until_index = index + 1
+                #accum_token = token
+                #while accum_token + normalize_token(line_token.split()[until_index] != current_word + text_bpe[index_bpe+1]:
+                if counter == 1:
+                    repeated_tokens += token + line_token.split()[index+1] + ' '
+                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + ' '
+                    repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + ' '
+                    repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + ' '
+                    repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + ' '
+                    subword_tags += 'O' + ' '
+                '''
+                else:
+                    repeated_tokens += token + line_token.split()[index + 1] + ' '
+                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index + 1] + ' '
+                    repeated_pos += line_pos.split()[index] + line_pos.split()[index + 1] + ' '
+                    repeated_deps += line_dep.split()[index] + line_dep.split()[index + 1] + ' '
+                    repeated_tags += line_tag.split()[index] + line_tag.split()[index + 1] + ' '
+                    subword_tags += 'B' + ' '
+                    counter -= 1
+                    while counter > 1:
+                        repeated_tokens += token + line_token.split()[index + 1] + ' '
+                        repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index + 1] + ' '
+                        repeated_pos += line_pos.split()[index] + line_pos.split()[index + 1] + ' '
+                        repeated_deps += line_dep.split()[index] + line_dep.split()[index + 1] + ' '
+                        repeated_tags += line_tag.split()[index] + line_tag.split()[index + 1] + ' '
+                        subword_tags += 'I' + ' '
+                        counter -= 1
+                    repeated_tokens += token + line_token.split()[index + 1] + ' '
+                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index + 1] + ' '
+                    repeated_pos += line_pos.split()[index] + line_pos.split()[index + 1] + ' '
+                    repeated_deps += line_dep.split()[index] + line_dep.split()[index + 1] + ' '
+                    repeated_tags += line_tag.split()[index] + line_tag.split()[index + 1] + ' '
+                    subword_tags += 'E' + ' '
+                '''
+                current_word = ''
+                skip = 1
+                index_bpe += 1
+                continue
             if counter == 1:
                 repeated_tokens += token + ' '
                 repeated_lemmas += line_lemma.split()[index] + ' '
