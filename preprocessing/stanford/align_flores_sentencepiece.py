@@ -31,7 +31,11 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
         i += 1
         #if i < 80000:#< 61222:
         #    continue
+        skip = 0
         for index, token in enumerate(line_token.split()):
+            if skip > 0:
+                skip -= 1
+                continue
             #token = token.replace(chr(8203),'').replace(chr(8206),'').replace('…','...').replace('º','o').replace('™','TM').replace('( ゜o゜ )','( ▁ ゚ o ▁ ゚ )')
             #token = unicodedata.normalize('NFKC', token)
             token = normalize_token(token)
@@ -59,6 +63,17 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     if not currently_in_space:
                         counter += 1
                     currently_in_space = True
+                elif index+2 < len(line_lemma) and line_lemma[index:index+1] == '"' and line_lemma[index:index+2] == '"':
+                    repeated_tokens += token + line_token.split()[index+1] + line_token.split()[index+2] + ' '
+                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + line_lemma.split()[index+2] + ' '
+                    repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + line_pos.split()[index+2] + ' '
+                    repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + line_dep.split()[index+2] + ' '
+                    repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + line_tag.split()[index+2] + ' '
+                    subword_tags += 'O' + ' '
+                    current_word = ''
+                    index_bpe += 1
+                    skip = 2
+                    continue
                 else:
                     current_word += line_bpe[index_bpe]
                     index_bpe += 1
