@@ -73,7 +73,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + line_tag.split()[index+2] + ' '
                     subword_tags += 'O' + ' '
                     current_word = ''
-                    index_bpe += 1
+                    index_bpe += 2
                     skip = 2
                     continue
                 else:
