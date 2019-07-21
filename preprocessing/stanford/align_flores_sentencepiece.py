@@ -58,6 +58,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         subword_tags += 'O' + ' '
                         current_word = ''
                         index_bpe += 1
+                        print('OK')
                         continue
                     index_bpe += 1
                     if not currently_in_space:
