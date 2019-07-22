@@ -91,7 +91,9 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         #exit()
                     print(index_bpe, token,len(token), len(current_word), current_word)
                 '''
-            if index_bpe < len(line_bpe) and line_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
+            #if index_bpe < len(line_bpe) and line_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
+            if index_bpe < len(line_bpe) and line_bpe[index_bpe] not in [' ', '\u2581'] and index + 1 < len(
+                        line_token.split()) and counter == 1:
                 #print('hola')
                 #print(ord(text_bpe[index_bpe]))
                 #print()
@@ -99,16 +101,16 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                 #accum_token = token
                 #while accum_token + normalize_token(line_token.split()[until_index] != current_word + text_bpe[index_bpe+1]:
                 if counter == 1:
-                    try:
-                        repeated_tokens += token + line_token.split()[index+1] + ' '
-                        repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + ' '
-                        repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + ' '
-                        repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + ' '
-                        repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + ' '
-                        subword_tags += 'O' + ' '
-                    except:
-                        print(line_token)
-                        exit()
+                    # try:
+                    repeated_tokens += token + line_token.split()[index+1] + ' '
+                    repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index+1] + ' '
+                    repeated_pos += line_pos.split()[index] + line_pos.split()[index+1] + ' '
+                    repeated_deps += line_dep.split()[index] + line_dep.split()[index+1] + ' '
+                    repeated_tags += line_tag.split()[index] + line_tag.split()[index+1] + ' '
+                    subword_tags += 'O' + ' '
+                    #except:
+                    #    print(line_token)
+                    #    exit()
                 else:
                     repeated_tokens += token + line_token.split()[index + 1] + ' '
                     repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index + 1] + ' '
