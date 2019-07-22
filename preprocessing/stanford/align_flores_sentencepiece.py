@@ -109,6 +109,8 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     except:
                         print(line_token)
                         exit()
+                else:
+                    print('counter', counter)
                 '''
                 else:
                     repeated_tokens += token + line_token.split()[index + 1] + ' '
