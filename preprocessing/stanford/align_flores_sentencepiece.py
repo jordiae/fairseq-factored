@@ -110,9 +110,6 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         print(line_token)
                         exit()
                 else:
-                    print('counter', counter)
-                '''
-                else:
                     repeated_tokens += token + line_token.split()[index + 1] + ' '
                     repeated_lemmas += line_lemma.split()[index] + line_lemma.split()[index + 1] + ' '
                     repeated_pos += line_pos.split()[index] + line_pos.split()[index + 1] + ' '
@@ -134,7 +131,6 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     repeated_deps += line_dep.split()[index] + line_dep.split()[index + 1] + ' '
                     repeated_tags += line_tag.split()[index] + line_tag.split()[index + 1] + ' '
                     subword_tags += 'E' + ' '
-                '''
                 current_word = ''
                 skip = 1
                 index_bpe += 1
