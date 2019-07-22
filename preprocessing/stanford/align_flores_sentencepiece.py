@@ -91,7 +91,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         #exit()
                     print(index_bpe, token,len(token), len(current_word), current_word)
                 '''
-            if index_bpe < len(text_bpe) and text_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
+            if index_bpe < len(text_bpe) and line_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
                 #print('hola')
                 #print(ord(text_bpe[index_bpe]))
                 #print()
