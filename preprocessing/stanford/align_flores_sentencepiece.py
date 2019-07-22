@@ -94,7 +94,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
             #if index_bpe < len(line_bpe) and line_bpe[index_bpe] not in [' ', '\u2581']: # N features map to 1 subword, eg. " . -> ". FTM, assume only one extra token.
             #if index_bpe < len(line_bpe) and line_bpe[index_bpe] not in [' ', '\u2581'] and index + 1 < len(
             #            line_token.split()) and counter == 1:
-            if index_bpe < len(line_bpe) and ((line_bpe[index_bpe] in ['"']) or (line_bpe[index_bpe] in ['s'] and line_bpe[index_bpe-2:index_bpe] == 'it')) and index + 1 < len(
+            if index_bpe < len(line_bpe) and ((line_bpe[index_bpe] in ['"', '.']) or (line_bpe[index_bpe] in ['s'] and line_bpe[index_bpe-2:index_bpe] == 'it')) and index + 1 < len(
                         line_token.split()) and counter == 1:
                 #print('hola')
                 #print(ord(text_bpe[index_bpe]))
