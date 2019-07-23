@@ -100,7 +100,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     or (index_bpe > 2 and (line_bpe[index_bpe] in ['r'] and line_bpe[index_bpe-3:index_bpe] == 'you'))\
                     or (index_bpe > 2 and (line_bpe[index_bpe:index_bpe+3] == 'not' and line_bpe[index_bpe-3:index_bpe] == 'can')) and index + 1 < len(
                         line_token.split()) and counter == 1) \
-                    or ((index_bpe > 2) and (line_bpe[index_bpe:index_bpe+2] == 'nt' and line_bpe[index_bpe-2:index_bpe] == 'we') and index +1 < len(line_token.split()) and counter == 1)
+                    or ((index_bpe > 1) and (token =='we' and line_bpe[index_bpe:index_bpe+2] == 'nt' and line_bpe[index_bpe-2:index_bpe] == 'we') and index +1 < len(line_token.split()) and counter == 1)
 
                 if i == 2847:
                     print(index_bpe, line_bpe[index_bpe], special)
