@@ -102,7 +102,7 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                         line_token.split()) and counter == 1) \
                     or ((index_bpe > 1) and (token =='we' and line_bpe[index_bpe:index_bpe+2] == 'nt' and line_bpe[index_bpe-2:index_bpe] == 'we') and index +1 < len(line_token.split()) and counter == 1)
 
-                if i == 2847:
+                if i in [1927,2847]:
                     print(index_bpe, line_bpe[index_bpe], special)
             except Exception as e:
                 print(e)
