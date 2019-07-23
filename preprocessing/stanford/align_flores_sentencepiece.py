@@ -47,6 +47,8 @@ def align_sentencepiece(text_bpe, text_token, text_lemma, text_pos, text_dep, te
                     print(token)
                     print('current_word', current_word)
                     print('out of bounds', line_token, index_bpe, len(line_bpe)-1)
+                    print(line_bpe)
+                    print(repeated_lemmas.splitlines()[-1])
                     exit()
                 if line_bpe[index_bpe] == '\u2581' or line_bpe[index_bpe] == ' ':
                     if line_bpe[index_bpe] == '\u2581' and (index_bpe == 0 or line_bpe[index_bpe-1] == ' ') and (index_bpe == len(line_bpe)-1 or line_bpe[index_bpe+1] == ' '):
